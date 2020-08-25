@@ -1,0 +1,1 @@
+/Applications/Unity2019.2.2f1/Unity.app/Contents/MacOS/Unity -gvh_disable       -batchmode       -importPackage /Users/kkawai/Downloads/play-services-resolver-1.2.124.0.unitypackage       -projectPath  /Users/kkawai/dev/vdopia/samples/unity_samples/ChocolateUnityPackageProject      -exportPackage Assets ChocolateMediationPlugin-1.0.5.unitypackage       -quit
