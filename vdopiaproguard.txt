@@ -202,5 +202,5 @@ public static final ** CREATOR;
 #Our own plugin
 -keep class com.vdopia.ads.lw.Chartboost* {*;}
 
--keep class com.vdopia.unity.plugin.** {*;}
--keep interface com.vdopia.unity.plugin.** {*;}
+-keep class com.freestar.android.unity.plugin.** {*;}
+-keep interface com.freestar.android.unity.plugin.** {*;}

@@ -19,18 +19,18 @@ apply plugin: 'com.android.library'
  *
  */
 ext {
-    bintrayRepo = 'sdk' // repo name
-    bintrayName = 'unity-plugin' // CHANGE PER SDK TYPE
-    publishedGroupId = 'com.vdopia.ads.lw' // maven group id
+    bintrayRepo = 'fsdk' // repo name
+    bintrayName = 'unity-plugin-beta' // CHANGE PER SDK TYPE
+    publishedGroupId = 'com.freestar.android.unity' // maven group id
     libraryName = "$bintrayRepo"  // same as repo name
     artifact = "$bintrayName" // maven artifact name; same as bintrayName
-    libraryDescription = 'Chocolate Platform android sdk - unity plugin: try/catch in SendMessageToUnity'   //CHANGE PER SDK TYPE
-    siteUrl = 'https://chocolateplatform.com'
-    gitUrl = 'https://bitbucket.org/vdopia/androidsdk.git'
-    libraryVersion = '1.2.7'  //CHANGE
+    libraryDescription = 'Freestar Platform android sdk'   //CHANGE PER SDK TYPE
+    siteUrl = 'https://freestar.io'
+    gitUrl = 'https://github.com/freestarcapital/SDK_documentation_android.git'
+    libraryVersion = '1.2.8'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'vdopia developer'
-    developerEmail = 'supply@chocolateplatform.com'
+    developerEmail = 'sdk@freestar.io'
     licenseName = 'The Apache  Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
@@ -80,7 +80,7 @@ buildscript {
 repositories {
     jcenter()
     google()
-
+    maven { url "https://dl.bintray.com/vdopiacorp/fsdk" }
     flatDir {
         dirs 'libs'
     }
@@ -89,10 +89,11 @@ repositories {
 dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
-    compileOnly project(':Source')
-    compileOnly 'com.android.support:multidex:1.0.3'
+    //compileOnly project(':Source')
+    compileOnly 'com.freestar.android.ads:freestar:3.2.8'
+    //compileOnly 'com.android.support:multidex:1.0.3'
     //compile 'com.vdopia.ads.lw:coresdk:2.5.2.0'
 }
 
-apply from: '../Source/installv.gradle'
-apply from: '../Source/bintrayv.gradle'
+apply from: 'installv.gradle'
+apply from: 'bintrayv.gradle'

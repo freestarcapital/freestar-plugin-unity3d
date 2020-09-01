@@ -1,11 +1,10 @@
-package com.vdopia.unity.plugin;
+package com.freestar.android.unity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.freestar.android.ads.AdRequest;
 import com.freestar.android.ads.ChocolateLogger;
@@ -16,42 +15,64 @@ import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class VdopiaPlugin {
+public class FreestarPlugin {
 
-    private static final String TAG = "VdopiaUnityPlugin";
+    private static final String TAG = "FreestarPlugin";
 
     private static final boolean DEBUG_SHOW_CHOOSER = false;
-    private Activity mActivity;
-    private VdopiaAdUnityListener mUnityAdListener;
+    private WeakReference<Activity> mActivity;
+    private FreestarAdUnityListener mUnityAdListener;
 
     private AdRequest mAdRequest;
-    private RewardedAd mRewardedAd;
-    private InterstitialAd mInterstitialAd;
+    private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
+    private Map<String, RewardedAd> rewardedAdMap = new HashMap<>();
 
     private static boolean isRequestInProgress;
     private static long lastRequestTime;
 
-    private static VdopiaPlugin VdopiaPluginInstance;
+    private static FreestarPlugin freestarPluginInstance;
 
-    private VdopiaPlugin() {
-        //Empty Private Constructor
+    private FreestarPlugin() {
+        //empty constructor
     }
 
-    public static synchronized VdopiaPlugin GetInstance() {
-        //ChocolateLogger.enable(true);
-        Log.i(TAG, "Unity Plugin Set.");
-        if (VdopiaPluginInstance == null) {
-            VdopiaPluginInstance = new VdopiaPlugin();
+    private RewardedAd getRewardedAd(String placement) {
+        placement = placement + "";
+        if (rewardedAdMap.containsKey(placement)) {
+            return rewardedAdMap.get(placement);
+        }
+        RewardedAd rewardedAd = new RewardedAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.REWARDED_AD_TYPE, mUnityAdListener));
+        rewardedAdMap.put(placement, rewardedAd);
+        return rewardedAd;
+    }
+
+    private InterstitialAd getInterstitialAd(String placement) {
+        placement = placement + "";
+        if (interstitialAdMap.containsKey(placement)) {
+            return interstitialAdMap.get(placement);
+        }
+        InterstitialAd interstitialAd = new InterstitialAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.INTERSTITIAL_AD_TYPE, mUnityAdListener));
+        interstitialAdMap.put(placement, interstitialAd);
+        return interstitialAd;
+    }
+
+    public static synchronized FreestarPlugin GetInstance() {
+        ChocolateLogger.i(TAG, "Unity Plugin Set.");
+        if (freestarPluginInstance == null) {
+            freestarPluginInstance = new FreestarPlugin();
         }
 
-        return VdopiaPluginInstance;
+        return freestarPluginInstance;
     }
 
     private AdRequest getAdRequest() {
@@ -62,32 +83,32 @@ public class VdopiaPlugin {
     }
 
     /**
-     * This is the first method that is called on the single instance of VdopiaPlugin.
+     * This is the first method that is called on the single instance of FreestarPlugin.
      *
      * @param activity
      */
     public void SetActivity(Activity activity) {
-        Log.i(TAG, "Unity Activity Set.");
-        mActivity = activity;
+        ChocolateLogger.i(TAG, "Unity Activity Set.");
+        mActivity = new WeakReference<>(activity);
         getAdRequest();
     }
 
-    public void SetUnityAdListener(VdopiaAdUnityListener listener) {
-        Log.i(TAG, "Unity Listener Set.");
+    public void SetUnityAdListener(FreestarAdUnityListener listener) {
+        ChocolateLogger.i(TAG, "Unity Listener Set.");
         mUnityAdListener = listener;
     }
 
     public void SetAdRequestUserParams(String age, String birthDate, String gender, String maritalStatus,
                                        String ethnicity, String dmaCode, String postal, String curPostal,
                                        String latitude, String longitude) {
-        Log.i(TAG, "Unity User Params Set.");
+        ChocolateLogger.i(TAG, "Unity User Params Set.");
         getAdRequest();
 
         try {
             mAdRequest.setAge(age);
             mAdRequest.setBirthday(getDate(birthDate));
         } catch (Exception e) {
-            ChocolateLogger.e(TAG,"SetAdRequestUserParams (1):",e);
+            ChocolateLogger.e(TAG, "SetAdRequestUserParams (1):", e);
         }
 
         try {
@@ -105,13 +126,13 @@ public class VdopiaPlugin {
             mAdRequest.setDmaCode(dmaCode);
             mAdRequest.setPostalCode(postal);
             mAdRequest.setCurrPostal(curPostal);
-        }catch (Exception e) {
-            ChocolateLogger.e(TAG,"SetAdRequestUserParams (2):",e);
+        } catch (Exception e) {
+            ChocolateLogger.e(TAG, "SetAdRequestUserParams (2):", e);
         }
 
         if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
             try {
-                Log.i(TAG, "Unity Location Params Set.");
+                ChocolateLogger.i(TAG, "Unity Location Params Set.");
                 Location location = new Location("");
                 location.setLatitude(Double.valueOf(latitude));
                 location.setLongitude(Double.valueOf(longitude));
@@ -122,51 +143,31 @@ public class VdopiaPlugin {
         }
     }
 
-    public void SetAdRequestAppParams(String appName, String pubName,
-                                      String appDomain, String pubDomain,
-                                      String storeUrl, String iabCategory) {
-        Log.i(TAG, "Unity App Params Set.");
-        getAdRequest();
-
-        mAdRequest.setAppName(appName);
-        mAdRequest.setRequester(pubName);
-
-        mAdRequest.setAppDomain(appDomain);
-        mAdRequest.setPublisherDomain(pubDomain);
-
-        mAdRequest.setAppStoreUrl(storeUrl);
-        mAdRequest.setCategory(iabCategory);
-    }
-
     public void SetTestModeEnabled(boolean isEnabled, String hashID) {
-        hashID = hashID == null ? "TEST-HASH-ID-NOT-SET-OK" : hashID;
-        Log.i(TAG, "Unity Test Params Set: " + isEnabled);
-        ChocolateLogger.enable(isEnabled);
+        ChocolateLogger.i(TAG, "Unity Test Params Set: " + isEnabled);
+        FreeStarAds.enableLogging(isEnabled);
         FreeStarAds.enableTestAds(isEnabled);
-        getAdRequest();
-        mAdRequest.setTestModeEnabled(isEnabled);
+        getAdRequest().setTestModeEnabled(isEnabled);
 
-        Set<String> testID = new HashSet<>();
-        testID.add(hashID);
-        mAdRequest.setTestDevices(testID);
+        if (!TextUtils.isEmpty(hashID)) {
+            Set<String> testID = new HashSet<>();
+            testID.add(hashID);
+            mAdRequest.setTestDevices(testID);
+        }
     }
 
-    public void ChocolateInit(final String apiKey) {
-        Log.i(TAG, "ChocolateInit: " + apiKey);
+    public void Init(final String apiKey) {
+        ChocolateLogger.i(TAG, "Init: " + apiKey);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     FreeStarAds.init(getActivity(), apiKey);
                 } catch (Throwable t) {
-                    Log.e(TAG,"ChocolateInit failed",t);
+                    ChocolateLogger.e(TAG, "Init failed", t);
                 }
             }
         });
-    }
-
-    public void PrefetchInterstitialAd(final String apiKey) {
-        //does nothing, but don't delete; it could break publishers code
     }
 
     private boolean isQuitting() {
@@ -175,10 +176,10 @@ public class VdopiaPlugin {
 
     public void LoadInterstitialAd(final String apiKey) {
         if (DEBUG_SHOW_CHOOSER) {
-            ChocolatePartners.choosePartners(ChocolatePartners.ADTYPE_INTERSTITIAL, getActivity(), new DialogInterface.OnClickListener() {
+            MediationPartners.choosePartners(MediationPartners.ADTYPE_INTERSTITIAL, getActivity(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ChocolatePartners.setInterstitialPartners(getAdRequest());
+                    MediationPartners.setInterstitialPartners(getAdRequest());
                     _LoadInterstitialAd(apiKey);
                 }
             });
@@ -187,154 +188,127 @@ public class VdopiaPlugin {
         }
     }
 
-    private void _LoadInterstitialAd(final String apiKey) {
+    private void _LoadInterstitialAd(final String placement) {
 
         if (isQuitting()) return;
         if (!canRequest()) {
-            Log.i(TAG, "Cannot LoadInterstitialAd while another ad is in progress");
+            ChocolateLogger.i(TAG, "Cannot LoadInterstitialAd while another ad is in progress");
             return;
         }
         markRequest();
-        Log.i(TAG, "LoadInterstitialAd Called.");
+        ChocolateLogger.i(TAG, "LoadInterstitialAd Called.");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (mInterstitialAd == null)
-                        mInterstitialAd = new InterstitialAd(getActivity(), new VdopiaSdkAdEventHandler(VdopiaSdkAdEventHandler.INTERSTITIAL_AD_TYPE, mUnityAdListener));
-                    mInterstitialAd.loadAd(getAdRequest());
-                } catch (Exception e) {
-                    Log.e(TAG,"LoadInterstitialAd failed",e);
-                    /*
-                    Let's hold off on making the failed callback since we weren't doing it before.
-
-                    if (mUnityAdListener != null) {
-                        mUnityAdListener.onVdopiaAdEvent(VdopiaSdkAdEventHandler.INTERSTITIAL_AD_TYPE, VdopiaSdkAdEventHandler.INTERSTITIAL_AD_FAILED);
-                    }
-                    */
-                    resetRequest();
-                }
+                getInterstitialAd(placement).loadAd(getAdRequest(), placement);
             }
         });
     }
 
-    public void ShowInterstitialAd() {
-        Log.i(TAG, "ShowInterstitialAd Called.");
+    private InterstitialAd tempInterstitialAd;
+
+    public void ShowInterstitialAd(final String placement) {
         if (isQuitting()) return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mInterstitialAd != null) {
-                    try {
-                        mInterstitialAd.show();
-                    } catch (Exception e) {
-                        ChocolateLogger.e(TAG, "ShowInterstitialAd failed", e);
-                        resetRequest();
-                    }
+                if (getInterstitialAd(placement).isReady()) {
+                    ChocolateLogger.i(TAG, "ShowInterstitialAd (a)");
+                    getInterstitialAd(placement).show();
                 } else {
-                    Log.i(TAG, "ShowInterstitialAd Null");
-                    resetRequest();
+                    tempInterstitialAd = new InterstitialAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.INTERSTITIAL_AD_TYPE, new FreestarAdUnityListener() {
+                        @Override
+                        public void onFreestarAdEvent(String placement, String adType, String adEvent) {
+                            if (isQuitting()) return;
+                            if (adEvent.equals(FreestarAdEventHandler.INTERSTITIAL_AD_LOADED)) {
+                                tempInterstitialAd.show();
+                            }
+                        }
+                    }));
+                    ChocolateLogger.i(TAG, "ShowInterstitialAd (b)");
+                    interstitialAdMap.put(placement + "", tempInterstitialAd);
+                    tempInterstitialAd.loadAd(getAdRequest(), placement);
                 }
             }
         });
     }
 
-    public void PrefetchRewardAd(final String apiKey) {
-        //does nothing, but don't delete; it could break publishers code
-    }
-
-    public void LoadRewardAd(final String apiKey) {
+    public void LoadRewardAd(final String placement) {
         if (DEBUG_SHOW_CHOOSER) {
-            ChocolatePartners.choosePartners(ChocolatePartners.ADTYPE_REWARDED, getActivity(), new DialogInterface.OnClickListener() {
+            MediationPartners.choosePartners(MediationPartners.ADTYPE_REWARDED, getActivity(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ChocolatePartners.setRewardedPartners(getAdRequest());
-                    _LoadRewardAd(apiKey);
+                    MediationPartners.setRewardedPartners(getAdRequest());
+                    _LoadRewardAd(placement);
                 }
             });
         } else {
-            _LoadRewardAd(apiKey);
+            _LoadRewardAd(placement);
         }
     }
 
-    private void _LoadRewardAd(final String apiKey) {
+    private void _LoadRewardAd(final String placement) {
 
         if (isQuitting()) return;
         if (!canRequest()) {
-            Log.i(TAG, "Cannot LoadRewardAd while another ad is in progress");
+            ChocolateLogger.i(TAG, "Cannot LoadRewardAd while another ad is in progress");
             return;
         }
         markRequest();
-        Log.i(TAG, "LoadRewardAd Called.");
+        ChocolateLogger.i(TAG, "LoadRewardAd Called.");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (mRewardedAd == null)
-                        mRewardedAd = new RewardedAd(getActivity(), new VdopiaSdkAdEventHandler(VdopiaSdkAdEventHandler.REWARD_AD_TYPE, mUnityAdListener));
-                    mRewardedAd.loadAd(getAdRequest());
-                }catch (Exception e) {
-                    ChocolateLogger.e(TAG,"LoadRewardAd failed",e);
-                    /*
-                    Let's hold off on making the failed callback since we weren't doing it before.
-
-                    if (mUnityAdListener != null) {
-                        mUnityAdListener.onVdopiaAdEvent(VdopiaSdkAdEventHandler.REWARD_AD_TYPE, VdopiaSdkAdEventHandler.REWARD_AD_FAILED);
-                    }
-                    */
-                    resetRequest();
-                }
+                getRewardedAd(placement).loadAd(getAdRequest(), placement);
             }
         });
     }
 
-    public boolean IsRewardAdAvailableToShow() {
+    public boolean IsRewardAdAvailableToShow(String placement) {
         try {
-            return mRewardedAd != null && mRewardedAd.isReady();
-        }catch (Exception e) {
-            ChocolateLogger.e(TAG,"IsRewardAdAvailableToShow failed",e);
+            return getRewardedAd(placement).isReady();
+        } catch (Exception e) {
+            ChocolateLogger.e(TAG, "IsRewardAdAvailableToShow failed", e);
             return false;
         }
     }
 
-    public boolean IsInterstitialAdAvailableToShow() {
+    public boolean IsInterstitialAdAvailableToShow(String placement) {
         try {
-            return mInterstitialAd != null && mInterstitialAd.isReady();
-        }catch (Exception e) {
-            ChocolateLogger.e(TAG,"IsInterstitialAdAvailableToShow failed",e);
+            return getInterstitialAd(placement).isReady();
+        } catch (Exception e) {
+            ChocolateLogger.e(TAG, "IsInterstitialAdAvailableToShow failed", e);
             return false;
         }
     }
 
-    public void ShowRewardAd(final String secretCode, final String userID,
+    private RewardedAd tempRewardedAd;
+
+    public void ShowRewardAd(final String placement,
+                             final String secretCode, final String userID,
                              final String rewardName, final String rewardAmount) {
-        Log.d(TAG, "Reward To : " + userID + " " + rewardAmount + " " + rewardName);
+        ChocolateLogger.d(TAG, "Reward To : " + userID + " " + rewardAmount + " " + rewardName);
         if (isQuitting()) return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                try {
-                    if (mRewardedAd != null && mRewardedAd.isReady()) {
-                        mRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
-                        return;
-                    }
-
-                    if (mRewardedAd == null) {
-                        mRewardedAd = new RewardedAd(getActivity(), new VdopiaSdkAdEventHandler(VdopiaSdkAdEventHandler.REWARD_AD_TYPE, new VdopiaAdUnityListener() {
-                            @Override
-                            public void onVdopiaAdEvent(String adType, String adEvent) {
-                                if (adEvent != null && adEvent.equals("REWARD_AD_LOADED")) {
-                                    mRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
-                                }
-                                resetRequest();
+                if (getRewardedAd(placement).isReady()) {
+                    ChocolateLogger.i(TAG, "ShowRewardAd (a)");
+                    getRewardedAd(placement).showRewardAd(secretCode, userID, rewardName, rewardAmount);
+                } else {
+                    tempRewardedAd = new RewardedAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.REWARDED_AD_TYPE, new FreestarAdUnityListener() {
+                        @Override
+                        public void onFreestarAdEvent(String placement, String adType, String adEvent) {
+                            if (isQuitting()) return;
+                            if (adEvent.equals(FreestarAdEventHandler.REWARD_AD_LOADED)) {
+                                tempRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
                             }
-                        }));
-                    }
-                    mRewardedAd.loadAd(getAdRequest());
-                }catch (Exception e) {
-                    ChocolateLogger.e(TAG,"ShowRewardAd failed",e);
-                    resetRequest();
+                        }
+                    }));
+                    ChocolateLogger.i(TAG, "ShowRewardAd (b)");
+                    rewardedAdMap.put(placement + "", tempRewardedAd);
+                    tempRewardedAd.loadAd(getAdRequest(), placement);
                 }
             }
         });
@@ -342,9 +316,9 @@ public class VdopiaPlugin {
 
     private Activity getActivity() {
         if (mActivity == null) {
-            mActivity = UnityPlayer.currentActivity;
+            mActivity = new WeakReference<>(UnityPlayer.currentActivity);
         }
-        return mActivity;
+        return mActivity.get();
     }
 
     private Date getDate(String dateString) {
@@ -422,7 +396,7 @@ public class VdopiaPlugin {
     public void SetPrivacySettings(boolean gdprApplies, String gdprConsentString) {
         try {
             FreeStarAds.setGDPR(getActivity(), gdprApplies, gdprConsentString);
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "SetPrivacySettings failed", t);
         }
     }
@@ -430,7 +404,7 @@ public class VdopiaPlugin {
     public void SetCustomSegmentProperty(String key, String value) {
         try {
             FreeStarAds.setCustomSegmentProperty(getActivity(), key, value);
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "SetCustomSegmentProperty failed", t);
         }
     }
@@ -438,7 +412,7 @@ public class VdopiaPlugin {
     public String GetCustomSegmentProperty(String key) {
         try {
             return FreeStarAds.getCustomSegmentProperty(getActivity(), key);
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "GetCustomSegmentProperty failed", t);
             return null;
         }
@@ -452,7 +426,7 @@ public class VdopiaPlugin {
             } else {
                 return null;
             }
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "GetAllCustomSegmentProperties failed", t);
             return null;
         }
@@ -461,7 +435,7 @@ public class VdopiaPlugin {
     public void DeleteCustomSegmentProperty(String key) {
         try {
             FreeStarAds.deleteCustomSegmentProperty(getActivity(), key);
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "DeleteCustomSegmentProperty failed", t);
         }
     }
@@ -469,26 +443,24 @@ public class VdopiaPlugin {
     public void DeleteAllCustomSegmentProperties() {
         try {
             FreeStarAds.deleteAllCustomSegmentProperties(getActivity());
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             ChocolateLogger.e(TAG, "DeleteAllCustomSegmentProperties failed", t);
         }
     }
 
-    //getAllCustomSegmentProperties
-
-    public String GetRewardAdWinner() {
+    public String GetRewardAdWinner(String placement) {
         try {
-            return mRewardedAd != null && mRewardedAd.isReady() ? mRewardedAd.getWinningPartnerName() : "";
-        }catch (Exception e) {
+            return getRewardedAd(placement).getWinningPartnerName();
+        } catch (Exception e) {
             ChocolateLogger.e(TAG, "GetRewardAdWinner failed", e);
             return "";
         }
     }
 
-    public String GetInterstitialAdWinner() {
+    public String GetInterstitialAdWinner(String placement) {
         try {
-            return mInterstitialAd != null && mInterstitialAd.isReady() ? mInterstitialAd.getWinningPartnerName() : "";
-        }catch (Exception e) {
+            return getInterstitialAd(placement).getWinningPartnerName();
+        } catch (Exception e) {
             ChocolateLogger.e(TAG, "GetInterstitialAdWinner failed", e);
             return "";
         }
