@@ -1,4 +1,4 @@
-package com.vdopia.unity.plugin;
+package com.freestar.android.unity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Only for testing purposes!
  */
-class ChocolatePartners {
+class MediationPartners {
 
-    private static int numInterstitial = 12;
-    private static int numRewarded = 12;
-    private static int numInview = 10;
+    private static int numInterstitial = 11;
+    private static int numRewarded = 11;
+    private static int numInview = 7;
     private static int numPreroll = 4;
 
     public static final int ADTYPE_INTERSTITIAL = 0;
@@ -35,14 +35,13 @@ class ChocolatePartners {
         interstitial_partners[1] = LVDOConstants.PARTNER.ADCOLONY.name();
         interstitial_partners[2] = LVDOConstants.PARTNER.APPLOVIN.name();
         interstitial_partners[3] = LVDOConstants.PARTNER.CRITEO.name();
-        interstitial_partners[4] = LVDOConstants.PARTNER.CHOCOLATE.name();
-        interstitial_partners[5] = LVDOConstants.PARTNER.FACEBOOK.name();
-        interstitial_partners[6] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
-        interstitial_partners[7] = LVDOConstants.PARTNER.GOOGLE.name();
-        interstitial_partners[8] = LVDOConstants.PARTNER.MOPUB.name();
-        interstitial_partners[9] = LVDOConstants.PARTNER.TAPJOY.name();
-        interstitial_partners[10] = LVDOConstants.PARTNER.UNITY.name();
-        interstitial_partners[11] = LVDOConstants.PARTNER.VUNGLE.name();
+        interstitial_partners[4] = LVDOConstants.PARTNER.FACEBOOK.name();
+        interstitial_partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        interstitial_partners[6] = LVDOConstants.PARTNER.GOOGLE.name();
+        interstitial_partners[7] = LVDOConstants.PARTNER.MOPUB.name();
+        interstitial_partners[8] = LVDOConstants.PARTNER.TAPJOY.name();
+        interstitial_partners[9] = LVDOConstants.PARTNER.UNITY.name();
+        interstitial_partners[10] = LVDOConstants.PARTNER.VUNGLE.name();
     }
 
     private static boolean[] interstitial_parters_selected = new boolean[numInterstitial];
@@ -75,14 +74,13 @@ class ChocolatePartners {
         rewarded_partners[1] = LVDOConstants.PARTNER.ADCOLONY.name();
         rewarded_partners[2] = LVDOConstants.PARTNER.APPLOVIN.name();
         rewarded_partners[3] = LVDOConstants.PARTNER.CRITEO.name();
-        rewarded_partners[4] = LVDOConstants.PARTNER.CHOCOLATE.name();
-        rewarded_partners[5] = LVDOConstants.PARTNER.FACEBOOK.name();
-        rewarded_partners[6] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
-        rewarded_partners[7] = LVDOConstants.PARTNER.GOOGLE.name();
-        rewarded_partners[8] = LVDOConstants.PARTNER.MOPUB.name();
-        rewarded_partners[9] = LVDOConstants.PARTNER.TAPJOY.name();
-        rewarded_partners[10] = LVDOConstants.PARTNER.UNITY.name();
-        rewarded_partners[11] = LVDOConstants.PARTNER.VUNGLE.name();
+        rewarded_partners[4] = LVDOConstants.PARTNER.FACEBOOK.name();
+        rewarded_partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        rewarded_partners[6] = LVDOConstants.PARTNER.GOOGLE.name();
+        rewarded_partners[7] = LVDOConstants.PARTNER.MOPUB.name();
+        rewarded_partners[8] = LVDOConstants.PARTNER.TAPJOY.name();
+        rewarded_partners[9] = LVDOConstants.PARTNER.UNITY.name();
+        rewarded_partners[10] = LVDOConstants.PARTNER.VUNGLE.name();
     }
 
     private static boolean[] rewarded_parters_selected = new boolean[numRewarded];
@@ -113,13 +111,10 @@ class ChocolatePartners {
         inview_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
         inview_partners[1] = LVDOConstants.PARTNER.APPLOVIN.name();
         inview_partners[2] = LVDOConstants.PARTNER.CRITEO.name();
-        inview_partners[3] = LVDOConstants.PARTNER.CHOCOLATE.name();
-        inview_partners[4] = LVDOConstants.PARTNER.FACEBOOK.name();
-        inview_partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
-        inview_partners[6] = LVDOConstants.PARTNER.GOOGLE.name();
-        inview_partners[7] = LVDOConstants.PARTNER.MOPUB.name();
-        inview_partners[8] = LVDOConstants.PARTNER.YAHOO.name();
-        inview_partners[9] = LVDOConstants.PARTNER.VUNGLE.name();
+        inview_partners[3] = LVDOConstants.PARTNER.FACEBOOK.name();
+        inview_partners[4] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        inview_partners[5] = LVDOConstants.PARTNER.GOOGLE.name();
+        inview_partners[6] = LVDOConstants.PARTNER.MOPUB.name();
     }
 
     private static boolean[] inview_parters_selected = new boolean[numInview];
