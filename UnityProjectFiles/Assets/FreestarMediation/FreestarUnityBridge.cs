@@ -188,7 +188,7 @@ namespace Freestar
 #endif
         }
 
-        public static void loadRewardedAd(placement)
+        public static void loadRewardedAd(string placement)
         {
 #if UNITY_IOS
             _loadRewardedAd(placement);
@@ -527,23 +527,23 @@ namespace Freestar
             Debug.Log("Ad Event Received: " + eventName + "  AdType: " + adType + "  Placement: [" + placement + "]");
             if (eventName == "INTERSTITIAL_AD_LOADED")
             {
-                interRec.onInterstitialLoaded(placement);
+                interRec.onInterstitialAdLoaded(placement);
             }
             else if (eventName == "INTERSTITIAL_AD_FAILED")
             {
-                interRec.onInterstitialFailed(placement);
+                interRec.onInterstitialAdFailed(placement);
             }
             else if (eventName == "INTERSTITIAL_AD_SHOWN")
             {
-                interRec.onInterstitialShown(placement);
+                interRec.onInterstitialAdShown(placement);
             }
             else if (eventName == "INTERSTITIAL_AD_DISMISSED")
             {
-                interRec.onInterstitialDismissed(placement);
+                interRec.onInterstitialAdDismissed(placement);
             }
             else if (eventName == "INTERSTITIAL_AD_CLICKED")
             {
-                interRec.onInterstitialClicked(placement);
+                interRec.onInterstitialAdClicked(placement);
             }
             else if (eventName == "REWARDED_AD_LOADED")
             {
