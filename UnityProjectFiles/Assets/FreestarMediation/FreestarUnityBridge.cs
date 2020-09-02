@@ -118,18 +118,18 @@ namespace Freestar
         public static void initWithAPIKey(string apiKey)
         {
 #if UNITY_IOS
-                _initWithAPIKey(apiKey);
+            _initWithAPIKey(apiKey);
 #endif
 
 #if UNITY_ANDROID
-               FreestarPlugin.Call("Init", apiKey);
+            FreestarPlugin.Call("Init", apiKey);
 #endif
         }
 
         public static void setInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
         {
 #if UNITY_IOS
-                _setupWithListener(listener.ToString());
+            _setupWithListener(listener.ToString());
 #endif
 
 #if UNITY_ANDROID
@@ -141,7 +141,7 @@ namespace Freestar
         public static void setRewardedAdListener(FreestarRewardedAdCallbackReceiver listener)
         {
 #if UNITY_IOS
-                _setupWithListener(listener.ToString());
+            _setupWithListener(listener.ToString());
 #endif
 
 #if UNITY_ANDROID
@@ -177,7 +177,7 @@ namespace Freestar
         public static void showInterstitialAd(string placement)
         {
 #if UNITY_IOS
-    		_showInterstitialAd();
+    		   _showInterstitialAd();
 #endif
 
 #if UNITY_ANDROID
@@ -191,7 +191,7 @@ namespace Freestar
         public static void loadRewardedAd(placement)
         {
 #if UNITY_IOS
-                _loadRewardedAd(placement);
+            _loadRewardedAd(placement);
 #endif
 
 #if UNITY_ANDROID
@@ -224,7 +224,7 @@ namespace Freestar
         {
 
 #if UNITY_IOS
-                _setDemograpics(age, birthDate, gender, maritalStatus, ethnicity);
+            _setDemograpics(age, birthDate, gender, maritalStatus, ethnicity);
 #endif
 
 #if UNITY_ANDROID
@@ -246,7 +246,7 @@ namespace Freestar
                              string ethnicity)
         {
 #if UNITY_IOS
-                _setDemograpics(age,birthDate,gender,maritalStatus,ethnicity);
+            _setDemograpics(age,birthDate,gender,maritalStatus,ethnicity);
 #endif
 
 #if UNITY_ANDROID
@@ -266,7 +266,7 @@ namespace Freestar
         {
 
 #if UNITY_IOS
-                _setLocation(dmaCode, postal, curPostal, latitude, longitude);
+            _setLocation(dmaCode, postal, curPostal, latitude, longitude);
 #endif
 
 #if UNITY_ANDROID
@@ -286,7 +286,7 @@ namespace Freestar
         public static void setPrivacySettings(bool gdprApplies, string gdprConsentString)
         {
 #if UNITY_IOS
-    				_setPrivacySettings(gdprApplies,gdprConsentString);
+            setPrivacySettings(gdprApplies,gdprConsentString);
 #endif
 
 #if UNITY_ANDROID
@@ -307,7 +307,7 @@ namespace Freestar
         public static void setCustomSegmentProperty(string key, string value)
         {
 #if UNITY_IOS
-    				_setCustomSegmentProperty(key,value);
+            _setCustomSegmentProperty(key,value);
 #endif
 
 #if UNITY_ANDROID
@@ -326,7 +326,7 @@ namespace Freestar
         public static string getCustomSegmentProperty(string key)
         {
 #if UNITY_IOS
-    				return _getCustomSegmentProperty(key);
+            return _getCustomSegmentProperty(key);
 #endif
 
 #if UNITY_ANDROID
@@ -346,8 +346,8 @@ namespace Freestar
         {
 #if UNITY_IOS
 
-                string jsonRep = _getAllCustomSegmentProperties();
-                return JsonUtility.FromJson<Dictionary<string, string>>(jsonRep);
+            string jsonRep = _getAllCustomSegmentProperties();
+            return JsonUtility.FromJson<Dictionary<string, string>>(jsonRep);
 #endif
 
 #if UNITY_ANDROID
@@ -374,8 +374,7 @@ namespace Freestar
         public static void deleteCustomSegmentProperty(string key)
         {
 #if UNITY_IOS
-
-                _deleteCustomSegmentProperty(key);
+            _deleteCustomSegmentProperty(key);
 #endif
 
 #if UNITY_ANDROID
@@ -393,7 +392,7 @@ namespace Freestar
         public static void deleteAllCustomSegmentProperties()
         {
 #if UNITY_IOS
-                _deleteAllCustomSegmentProperties();
+            _deleteAllCustomSegmentProperties();
 #endif
 
 #if UNITY_ANDROID
@@ -481,7 +480,7 @@ namespace Freestar
 #endif
         }
 
-        public static string GetRewardedAdWinner(string placement)
+        public static string GetRewardedAdWinner(string placement) //TODO
         {
 #if UNITY_ANDROID
             try
@@ -526,13 +525,6 @@ namespace Freestar
         private static void onFreestarEventReceiver(string placement, string adType, string eventName)
         {
             Debug.Log("Ad Event Received: " + eventName + "  AdType: " + adType + "  Placement: [" + placement + "]");
-            if ((eventName.Contains("INTERSTITIAL") && interRec == null) ||
-               (eventName.Contains("REWARD") && rewardRec == null))
-            {
-                Debug.Log("No callback listener detected");
-                return;
-            }
-
             if (eventName == "INTERSTITIAL_AD_LOADED")
             {
                 interRec.onInterstitialLoaded(placement);

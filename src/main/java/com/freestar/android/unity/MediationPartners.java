@@ -18,7 +18,7 @@ class MediationPartners {
     private static int numInterstitial = 11;
     private static int numRewarded = 11;
     private static int numInview = 7;
-    private static int numPreroll = 4;
+    private static int numPreroll = 3;
 
     public static final int ADTYPE_INTERSTITIAL = 0;
     public static final int ADTYPE_REWARDED = 1;
@@ -143,9 +143,8 @@ class MediationPartners {
 
     static {
         preroll_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
-        preroll_partners[1] = LVDOConstants.PARTNER.CHOCOLATE.name();
-        preroll_partners[2] = LVDOConstants.PARTNER.CRITEO.name();
-        preroll_partners[3] = LVDOConstants.PARTNER.GOOGLE.name();
+        preroll_partners[1] = LVDOConstants.PARTNER.CRITEO.name();
+        preroll_partners[2] = LVDOConstants.PARTNER.GOOGLE.name();
     }
 
     private static boolean[] preroll_parters_selected = new boolean[numPreroll];
