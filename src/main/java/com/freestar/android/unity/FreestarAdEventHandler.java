@@ -126,12 +126,12 @@ class FreestarAdEventHandler implements InterstitialAdListener, RewardedAdListen
     @Override
     public void onError(String message) {
         sendMessageToUnity("", FREESTAR_FAILED_TO_INITIALIZE);
-        ChocolateLogger.d(TAG, "initialization failure");
+        ChocolateLogger.d(TAG, "initialization failed: " + message);
     }
 
     @Override
     public void onSuccess() {
         sendMessageToUnity("", FREESTAR_SUCCESSFULLY_INITIALIZED);
-        ChocolateLogger.d(TAG, "initialized");
+        ChocolateLogger.d(TAG, "initialized successfully");
     }
 }

@@ -1,8 +1,8 @@
 <dependencies>
   <androidPackages>
 
-    <!-- Important Note: Chocolate Mediation Ads are not compatible with Admob/Google Ads 18.0.0
-         since 18.0.0+ is based on androidx support libraries.  Chocolate is still only
+    <!-- Important Note: Freestar Mediation Ads are not compatible with Admob/Google Ads 18.0.0
+         since 18.0.0+ is based on androidx support libraries.  Freestar is still only
          compatible with 17.2.1 or lower since it's mediation partner SDK's are based on the older
          android support libraries before AndroidX -->
     <androidPackage spec="com.google.android.gms:play-services-ads:17.2.1">
