@@ -6,9 +6,9 @@ using Freestar;
  * Modify for your own application.  Corresponds to Assets/Scenes/FreestarAdsSampleScene
  * which is a scene that contains a button to load ads.
  * If you want to run the sample, hook up this script to the Canvas
- * and then hook up the loadRewardAd method to the button.
+ * and then hook up the loadRewardedAd method to the button.
 */
-public class SampleFreestarAds : MonoBehaviour, FreestarRewardCallbackReceiver, FreestarInterstitialCallbackReceiver
+public class SampleFreestarAds : MonoBehaviour, FreestarRewardedAdCallbackReceiver, FreestarInterstitialAdCallbackReceiver
 {
 
     private const string TAG = "SampleFreestarAds";
@@ -35,54 +35,54 @@ public class SampleFreestarAds : MonoBehaviour, FreestarRewardCallbackReceiver, 
         #endif
 
         FreestarUnityBridge.setInterstitialAdListener(this);
-        FreestarUnityBridge.setRewardAdListener(this);
+        FreestarUnityBridge.setRewardedAdListener(this);
     }
 
-    public void onInterstitialLoaded(string msg)
+    public void onInterstitialAdLoaded(string placement)
     {
         //interstitial ad is ready!  You can display now, or you can wait until a later time.
-        updateStatusUI("Interstitial Ad Winner: " + FreestarUnityBridge.GetInterstitialAdWinner());
+        updateStatusUI("Interstitial Ad Winner: " + FreestarUnityBridge.GetInterstitialAdWinner(placement) + " Placement: [" + placement + "]");
         showInterstitialAd();
     }
-    public void onInterstitialFailed(string msg)
+    public void onInterstitialAdFailed(string placement)
     {
         updateStatusUI("Interstitial Ad: no-fillunRegisterAdListener");
         //no need to pre-fetch the next ad here.  this will be done internally and automatically.
     }
-    public void onInterstitialShown(string msg)
+    public void onInterstitialAdShown(string placement)
     {
 
     }
-    public void onInterstitialClicked(string msg)
+    public void onInterstitialAdClicked(string placement)
     {
 
     }
-    public void onInterstitialDismissed(string msg)
+    public void onInterstitialAdDismissed(string placement)
     {
 
     }
 
-    public void onRewardLoaded(string msg)
+    public void onRewardedAdLoaded(string placement)
     {
-        updateStatusUI("Rewarded Ad Winner: " + FreestarUnityBridge.GetRewardAdWinner());
+        updateStatusUI("Rewarded Ad Winner: " + FreestarUnityBridge.GetRewardAdWinner(placement) + " Placement: [" + placement + "]");
 
         //reward ad is ready!  You can display now, or you can wait until a later time.
         showRewardAd();
     }
-    public void onRewardFailed(string msg)
+    public void onRewardedAdFailed(string placement)
     {
         updateStatusUI("Rewarded Ad: no-fill");  //no-fill or no internet
         //no need to pre-fetch the next ad here.  this will be done internally and automatically.
     }
-    public void onRewardShown(string msg)
+    public void onRewardedAdShown(string placement)
     {
 
     }
-    public void onRewardFinished(string msg)
+    public void onRewardedAdFinished(string placement)
     {
         //TODO: REWARD THE USER HERE
     }
-    public void onRewardDismissed(string msg)
+    public void onRewardedAdDismissed(string placement)
     {
         //no need to pre-fetch the next ad here.  this will be done internally and automatically.
         //TODO: OR REWARD THE USER HERE
@@ -93,29 +93,29 @@ public class SampleFreestarAds : MonoBehaviour, FreestarRewardCallbackReceiver, 
     public void loadInterstitialAd()     //called when Interstitial button clicked
     {
         log("Load Interstitial Ad...");
-        FreestarUnityBridge.loadInterstitialAd();
+        FreestarUnityBridge.loadInterstitialAd("");
     }
 
     private void showInterstitialAd()
     {
         log("Show Interstitial Ad...");
-        FreestarUnityBridge.showInterstitialAd();
+        FreestarUnityBridge.showInterstitialAd("");
     }
 
     //===============Rewarded Video Ad Methods===============
     /**
      * Called when Load Rewarded Ad button is clicked
      */
-    public void loadRewardAd()
+    public void loadRewardedAd()
     {
         log("Load Reward Ad...");
-        FreestarUnityBridge.loadRewardAd();
+        FreestarUnityBridge.loadRewardedAd("");
     }
 
-    private void showRewardAd()           //called when btnShowReward Clicked
+    private void showRewardedAd()           //called when btnShowReward Clicked
     {
         log("Show Reward Ad...");
-        FreestarUnityBridge.showRewardAd(30, "coins", "", "qwer1234");
+        FreestarUnityBridge.showRewardedAd("", 30, "coins", "", "qwer1234");
     }
 
     private void updateStatusUI(string newStatus)
@@ -136,7 +136,7 @@ public class SampleFreestarAds : MonoBehaviour, FreestarRewardCallbackReceiver, 
     //Be sure to unRegister before loading a new scene.
     private void unRegisterAdListener()
     {
-        FreestarUnityBridge.removeRewardAdListener();
+        FreestarUnityBridge.removeRewardedAdListener();
         FreestarUnityBridge.removeInterstitialAdListener();
     }
 
@@ -150,6 +150,5 @@ public class SampleFreestarAds : MonoBehaviour, FreestarRewardCallbackReceiver, 
     {
         Debug.Log(TAG + " " + msg);
     }
-
 
 }

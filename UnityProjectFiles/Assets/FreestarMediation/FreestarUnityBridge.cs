@@ -7,22 +7,22 @@ using System;
 namespace Freestar
 {
 
-    public interface FreestarInterstitialCallbackReceiver
+    public interface FreestarInterstitialAdCallbackReceiver
     {
-        void onInterstitialLoaded(string msg);
-        void onInterstitialFailed(string msg);
-        void onInterstitialShown(string msg);
-        void onInterstitialClicked(string msg);
-        void onInterstitialDismissed(string msg);
+        void onInterstitialAdLoaded(string placement);
+        void onInterstitialAdFailed(string placement);
+        void onInterstitialAdShown(string placement);
+        void onInterstitialAdClicked(string placement);
+        void onInterstitialAdDismissed(string placement);
     }
 
-    public interface FreestarRewardedCallbackReceiver
+    public interface FreestarRewardedAdCallbackReceiver
     {
-        void onRewardLoaded(string msg);
-        void onRewardFailed(string msg);
-        void onRewardShown(string msg);
-        void onRewardFinished(string msg);
-        void onRewardDismissed(string msg);
+        void onRewardedAdLoaded(string placement);
+        void onRewardedAdFailed(string placement);
+        void onRewardedAdShown(string placement);
+        void onRewardedAdFinished(string placement);
+        void onRewardedAdDismissed(string placement);
     }
 
 
@@ -112,11 +112,9 @@ namespace Freestar
         }
 #endif
 
-        //private static GameObject callbackListener;
-        private static FreestarInterstitialCallbackReceiver interRec;
-        private static FreestarRewardCallbackReceiver rewardRec;
+        private static FreestarInterstitialAdCallbackReceiver interRec;
+        private static FreestarRewardedAdCallbackReceiver rewardRec;
 
-        //invokes the Objective-C fuctions only on iOS, not in Unity
         public static void initWithAPIKey(string apiKey)
         {
 #if UNITY_IOS
@@ -128,7 +126,7 @@ namespace Freestar
 #endif
         }
 
-        public static void setInterstitialAdListener(FreestarInterstitialCallbackReceiver listener)
+        public static void setInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
         {
 #if UNITY_IOS
                 _setupWithListener(listener.ToString());
@@ -140,7 +138,7 @@ namespace Freestar
 
         }
 
-        public static void setRewardAdListener(FreestarRewardedCallbackReceiver listener)
+        public static void setRewardedAdListener(FreestarRewardedAdCallbackReceiver listener)
         {
 #if UNITY_IOS
                 _setupWithListener(listener.ToString());
@@ -158,7 +156,7 @@ namespace Freestar
 #endif
         }
 
-        public static void removeRewardAdListener()
+        public static void removeRewardedAdListener()
         {
 #if UNITY_ANDROID
             rewardRec = null;
@@ -176,7 +174,7 @@ namespace Freestar
         }
 #endif
 
-        public static void showInterstitialAd()
+        public static void showInterstitialAd(string placement)
         {
 #if UNITY_IOS
     		_showInterstitialAd();
@@ -190,32 +188,32 @@ namespace Freestar
 #endif
         }
 
-        public static void loadRewardAd()
+        public static void loadRewardedAd(placement)
         {
 #if UNITY_IOS
-                _loadRewardAd();
+                _loadRewardedAd(placement);
 #endif
 
 #if UNITY_ANDROID
             if (AndroidPluginInstance() != null)
             {
-                FreestarPlugin.Call("LoadRewardAd", placement);
+                FreestarPlugin.Call("LoadRewardedAd", placement);
             }
         }
 #endif
 
-        public static void showRewardAd(int rewardAmount, string rewardName, string userId, string secretKey)
+        public static void showRewardedAd(string placement, int rewardAmount, string rewardName, string userId, string secretKey)
         {
 
 #if UNITY_IOS
-            _showRewardAd(rewardAmount, rewardName, userId, secretKey);
+            _showRewardAd(placement, rewardAmount, rewardName, userId, secretKey);
 #endif
 
 #if UNITY_ANDROID
 
             if (AndroidPluginInstance() != null)
             {
-                FreestarPlugin.Call("ShowRewardAd", secretKey, userId, rewardName, "" + rewardAmount);
+                FreestarPlugin.Call("ShowRewardedAd", placement, secretKey, userId, rewardName, "" + rewardAmount);
             }
         }
 #endif    
@@ -281,29 +279,6 @@ namespace Freestar
                     curPostal,
                     latitude,
                     longitude);
-            }
-#endif
-        }
-
-        public static void setAppInfo(string appName, string pubName,
-                         string appDomain, string pubDomain,
-                         string storeUrl, string iabCategory)
-        {
-
-#if UNITY_IOS
-                _setAppInfo(appName,pubName,appDomain,pubDomain,storeUrl,iabCategory);
-#endif
-
-#if UNITY_ANDROID
-            if (AndroidPluginInstance() != null)
-            {
-                FreestarPlugin.Call("SetAdRequestAppParams",
-                    appName,
-                    pubName,
-                    appDomain,
-                    pubDomain,
-                    storeUrl,
-                    iabCategory);
             }
 #endif
         }
@@ -451,7 +426,7 @@ namespace Freestar
 
         //This method calls Native Method to Check Reward Ad Availability
         //Returns true if Available and ready else return false
-        public static bool IsRewardAdAvailableToShow()
+        public static bool IsRewardedAdAvailableToShow(string placement)
         {
             Debug.Log("FreestarUnityBridge Check Reward Ad...");
             bool isAvailable = false;
@@ -459,18 +434,18 @@ namespace Freestar
 #if UNITY_ANDROID
             if (AndroidPluginInstance() != null)
             {
-                isAvailable = FreestarPlugin.Call<bool>("IsRewardAdAvailableToShow");
+                isAvailable = FreestarPlugin.Call<bool>("IsRewardedAdAvailableToShow", placement);
             }
-            Debug.Log("Is Reward Ad available: " + isAvailable);
+            Debug.Log("Is Rewarded Ad available: " + isAvailable);
 #endif
 
 #if UNITY_IOS
-            Debug.Log("IsRewardAdAvailableToShow api not available on iOS yet");
+            Debug.Log("IsRewardedAdAvailableToShow api not available on iOS yet");
 #endif
             return isAvailable;
         }
 
-        public static bool IsInterstitialAdAvailableToShow()
+        public static bool IsInterstitialAdAvailableToShow(string placement)
         {
             Debug.Log("FreestarUnityBridge Check Interstitial Ad...");
             bool isAvailable = false;
@@ -478,13 +453,13 @@ namespace Freestar
 #if UNITY_ANDROID
             if (AndroidPluginInstance() != null)
             {
-                isAvailable = FreestarPlugin.Call<bool>("IsInterstitialAdAvailableToShow");
+                isAvailable = FreestarPlugin.Call<bool>("IsInterstitialAdAvailableToShow", placement);
             }
             Debug.Log("Is Interstitial Ad available: " + isAvailable);
 #endif
 
 #if UNITY_IOS
-            Debug.Log("IsInterstitialAdAvailableToShow api not available on iOS yet");
+            Debug.Log("IsInterstitialAdAvailableToShow api not available on iOS yet");   //TODO
 #endif
 
             return isAvailable;
@@ -506,32 +481,32 @@ namespace Freestar
 #endif
         }
 
-        public static string GetRewardAdWinner()
+        public static string GetRewardedAdWinner(string placement)
         {
 #if UNITY_ANDROID
             try
             {
-                return FreestarPlugin.Call<string>("GetRewardAdWinner");
+                return FreestarPlugin.Call<string>("GetRewardedAdWinner", placement);
             }
             catch (Exception e)
             {
-                Debug.Log("GetRewardAdWinner failed: " + e);
+                Debug.Log("GetRewardedAdWinner failed: " + e);
                 return "";
             }
 #endif
 
 #if UNITY_IOS
-            Debug.Log("GetRewardAdWinner api not available on iOS yet");
+            Debug.Log("GetRewardedAdWinner api not available on iOS yet");
             return "";
 #endif
         }
 
-        public static string GetInterstitialAdWinner()
+        public static string GetInterstitialAdWinner(string placement)
         {
 #if UNITY_ANDROID
             try
             {
-                return FreestarPlugin.Call<string>("GetInterstitialAdWinner");
+                return FreestarPlugin.Call<string>("GetInterstitialAdWinner", placement);
             }
             catch (Exception e)
             {
@@ -548,9 +523,9 @@ namespace Freestar
 
 #if UNITY_ANDROID
 
-        private static void onFreestarEventReceiver(string adType, string eventName)
+        private static void onFreestarEventReceiver(string placement, string adType, string eventName)
         {
-            Debug.Log("Ad Event Received : " + eventName + " : For Ad Type : " + adType);
+            Debug.Log("Ad Event Received: " + eventName + "  AdType: " + adType + "  Placement: [" + placement + "]");
             if ((eventName.Contains("INTERSTITIAL") && interRec == null) ||
                (eventName.Contains("REWARD") && rewardRec == null))
             {
@@ -558,49 +533,49 @@ namespace Freestar
                 return;
             }
 
-            if (eventName == "INTERSTITIAL_LOADED")
+            if (eventName == "INTERSTITIAL_AD_LOADED")
             {
-                interRec.onInterstitialLoaded("");
+                interRec.onInterstitialLoaded(placement);
             }
-            else if (eventName == "INTERSTITIAL_FAILED")
+            else if (eventName == "INTERSTITIAL_AD_FAILED")
             {
-                interRec.onInterstitialFailed("");
+                interRec.onInterstitialFailed(placement);
             }
-            else if (eventName == "INTERSTITIAL_SHOWN")
+            else if (eventName == "INTERSTITIAL_AD_SHOWN")
             {
-                interRec.onInterstitialShown("");
+                interRec.onInterstitialShown(placement);
             }
-            else if (eventName == "INTERSTITIAL_DISMISSED")
+            else if (eventName == "INTERSTITIAL_AD_DISMISSED")
             {
-                interRec.onInterstitialDismissed("");
+                interRec.onInterstitialDismissed(placement);
             }
-            else if (eventName == "INTERSTITIAL_CLICKED")
+            else if (eventName == "INTERSTITIAL_AD_CLICKED")
             {
-                interRec.onInterstitialClicked("");
+                interRec.onInterstitialClicked(placement);
             }
-            else if (eventName == "REWARD_AD_LOADED")
+            else if (eventName == "REWARDED_AD_LOADED")
             {
-                rewardRec.onRewardLoaded("");
+                rewardRec.onRewardedAdLoaded(placement);
             }
-            else if (eventName == "REWARD_AD_FAILED")
+            else if (eventName == "REWARDED_AD_FAILED")
             {
-                rewardRec.onRewardFailed("");
+                rewardRec.onRewardedAdFailed(placement);
             }
-            else if (eventName == "REWARD_AD_SHOWN")
+            else if (eventName == "REWARDED_AD_SHOWN")
             {
-                rewardRec.onRewardShown("");
+                rewardRec.onRewardedAdShown(placement);
             }
-            else if (eventName == "REWARD_AD_SHOWN_ERROR")
+            else if (eventName == "REWARDED_AD_SHOWN_ERROR")
             {
-                rewardRec.onRewardFailed("");
+                rewardRec.onRewardedAdFailed(placement);
             }
-            else if (eventName == "REWARD_AD_DISMISSED")
+            else if (eventName == "REWARDED_AD_DISMISSED")
             {
-                rewardRec.onRewardDismissed("");
+                rewardRec.onRewardedAdDismissed(placement);
             }
-            else if (eventName == "REWARD_AD_COMPLETED")
+            else if (eventName == "REWARDED_AD_COMPLETED")
             {
-                rewardRec.onRewardFinished("");
+                rewardRec.onRewardedAdFinished(placement);
                 //If you setup server-to-server (S2S) rewarded callbacks you can
                 //assume your server url will get hit at this time.
                 //Or you may choose to reward your user from the client here.

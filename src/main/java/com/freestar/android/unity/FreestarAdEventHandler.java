@@ -9,23 +9,23 @@ class FreestarAdEventHandler implements InterstitialAdListener, RewardedAdListen
 
     private static final String TAG = "FreestarUnityPlugin";
     static final String INTERSTITIAL_AD_TYPE = "FULLSCREEN_INTERSTITIAL";
-    static final String REWARDED_AD_TYPE = "REWARDED";
+    static final String REWARDED_AD_TYPE = "FULLSCREEN_REWARDED";
 
     private static final String FREESTAR_SUCCESSFULLY_INITIALIZED = "FREESTAR_SUCCESSFULLY_INITIALIZED";
     private static final String FREESTAR_FAILED_TO_INITIALIZE = "FREESTAR_FAILED_TO_INITIALIZE";
 
-    static final String INTERSTITIAL_AD_LOADED = "INTERSTITIAL_LOADED";
-    private static final String INTERSTITIAL_AD_FAILED = "INTERSTITIAL_FAILED";
-    private static final String INTERSTITIAL_AD_SHOWN = "INTERSTITIAL_SHOWN";
-    private static final String INTERSTITIAL_AD_DISMISSED = "INTERSTITIAL_DISMISSED";
-    private static final String INTERSTITIAL_AD_CLICKED = "INTERSTITIAL_CLICKED";
+    static final String INTERSTITIAL_AD_LOADED = "INTERSTITIAL_AD_LOADED";
+    private static final String INTERSTITIAL_AD_FAILED = "INTERSTITIAL_AD_FAILED";
+    private static final String INTERSTITIAL_AD_SHOWN = "INTERSTITIAL_AD_SHOWN";
+    private static final String INTERSTITIAL_AD_DISMISSED = "INTERSTITIAL_AD_DISMISSED";
+    private static final String INTERSTITIAL_AD_CLICKED = "INTERSTITIAL_AD_CLICKED";
 
-    static final String REWARD_AD_LOADED = "REWARD_AD_LOADED";
-    private static final String REWARD_AD_FAILED = "REWARD_AD_FAILED";
-    private static final String REWARD_AD_SHOWN = "REWARD_AD_SHOWN";
-    private static final String REWARD_AD_SHOWN_ERROR = "REWARD_AD_SHOWN_ERROR";
-    private static final String REWARD_AD_DISMISSED = "REWARD_AD_DISMISSED";
-    private static final String REWARD_AD_COMPLETED = "REWARD_AD_COMPLETED";
+    static final String REWARDED_AD_LOADED = "REWARDED_AD_LOADED";
+    private static final String REWARDED_AD_FAILED = "REWARDED_AD_FAILED";
+    private static final String REWARDED_AD_SHOWN = "REWARDED_AD_SHOWN";
+    private static final String REWARDED_AD_SHOWN_ERROR = "REWARDED_AD_SHOWN_ERROR";
+    private static final String REWARDED_AD_DISMISSED = "REWARDED_AD_DISMISSED";
+    private static final String REWARDED_AD_COMPLETED = "REWARDED_AD_COMPLETED";
 
     private String mAdType;
     private FreestarAdUnityListener mListener;
@@ -86,40 +86,40 @@ class FreestarAdEventHandler implements InterstitialAdListener, RewardedAdListen
     @Override
     public void onRewardedVideoLoaded(String placement) {
         FreestarPlugin.resetRequest();
-        sendMessageToUnity(placement, REWARD_AD_LOADED);
+        sendMessageToUnity(placement, REWARDED_AD_LOADED);
         ChocolateLogger.d(TAG, "onRewardedVideoLoaded");
     }
 
     @Override
     public void onRewardedVideoFailed(String placement, int errorCode) {
         FreestarPlugin.resetRequest();
-        sendMessageToUnity(placement, REWARD_AD_FAILED);
+        sendMessageToUnity(placement, REWARDED_AD_FAILED);
         ChocolateLogger.d(TAG, "onRewardedVideoFailed");
     }
 
     @Override
     public void onRewardedVideoShown(String placement) {
-        sendMessageToUnity(placement, REWARD_AD_SHOWN);
+        sendMessageToUnity(placement, REWARDED_AD_SHOWN);
         ChocolateLogger.d(TAG, "onRewardedVideoShown");
     }
 
     @Override
     public void onRewardedVideoShownError(String placement, int errorCode) {
         FreestarPlugin.resetRequest();
-        sendMessageToUnity(placement, REWARD_AD_SHOWN_ERROR);
+        sendMessageToUnity(placement, REWARDED_AD_SHOWN_ERROR);
         ChocolateLogger.d(TAG, "onRewardedVideoShownError");
     }
 
     @Override
     public void onRewardedVideoDismissed(String placement) {
         FreestarPlugin.resetRequest();
-        sendMessageToUnity(placement, REWARD_AD_DISMISSED);
+        sendMessageToUnity(placement, REWARDED_AD_DISMISSED);
     }
 
     @Override
     public void onRewardedVideoCompleted(String placement) {
         FreestarPlugin.resetRequest();
-        sendMessageToUnity(placement, REWARD_AD_COMPLETED);
+        sendMessageToUnity(placement, REWARDED_AD_COMPLETED);
         ChocolateLogger.d(TAG, "onRewardedVideoCompleted");
     }
 

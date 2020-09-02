@@ -174,17 +174,17 @@ public class FreestarPlugin {
         return getActivity() == null || getActivity().isFinishing();
     }
 
-    public void LoadInterstitialAd(final String apiKey) {
+    public void LoadInterstitialAd(final String placement) {
         if (DEBUG_SHOW_CHOOSER) {
             MediationPartners.choosePartners(MediationPartners.ADTYPE_INTERSTITIAL, getActivity(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     MediationPartners.setInterstitialPartners(getAdRequest());
-                    _LoadInterstitialAd(apiKey);
+                    _LoadInterstitialAd(placement);
                 }
             });
         } else {
-            _LoadInterstitialAd(apiKey);
+            _LoadInterstitialAd(placement);
         }
     }
 
@@ -233,29 +233,29 @@ public class FreestarPlugin {
         });
     }
 
-    public void LoadRewardAd(final String placement) {
+    public void LoadRewardedAd(final String placement) {
         if (DEBUG_SHOW_CHOOSER) {
             MediationPartners.choosePartners(MediationPartners.ADTYPE_REWARDED, getActivity(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     MediationPartners.setRewardedPartners(getAdRequest());
-                    _LoadRewardAd(placement);
+                    _LoadRewardedAd(placement);
                 }
             });
         } else {
-            _LoadRewardAd(placement);
+            _LoadRewardedAd(placement);
         }
     }
 
-    private void _LoadRewardAd(final String placement) {
+    private void _LoadRewardedAd(final String placement) {
 
         if (isQuitting()) return;
         if (!canRequest()) {
-            ChocolateLogger.i(TAG, "Cannot LoadRewardAd while another ad is in progress");
+            ChocolateLogger.i(TAG, "Cannot LoadRewardedAd while another ad is in progress");
             return;
         }
         markRequest();
-        ChocolateLogger.i(TAG, "LoadRewardAd Called.");
+        ChocolateLogger.i(TAG, "LoadRewardedAd Called.");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -264,11 +264,11 @@ public class FreestarPlugin {
         });
     }
 
-    public boolean IsRewardAdAvailableToShow(String placement) {
+    public boolean IsRewardedAdAvailableToShow(String placement) {
         try {
             return getRewardedAd(placement).isReady();
         } catch (Exception e) {
-            ChocolateLogger.e(TAG, "IsRewardAdAvailableToShow failed", e);
+            ChocolateLogger.e(TAG, "IsRewardedAdAvailableToShow failed", e);
             return false;
         }
     }
@@ -284,9 +284,9 @@ public class FreestarPlugin {
 
     private RewardedAd tempRewardedAd;
 
-    public void ShowRewardAd(final String placement,
-                             final String secretCode, final String userID,
-                             final String rewardName, final String rewardAmount) {
+    public void ShowRewardedAd(final String placement,
+                               final String secretCode, final String userID,
+                               final String rewardName, final String rewardAmount) {
         ChocolateLogger.d(TAG, "Reward To : " + userID + " " + rewardAmount + " " + rewardName);
         if (isQuitting()) return;
         getActivity().runOnUiThread(new Runnable() {
@@ -294,19 +294,19 @@ public class FreestarPlugin {
             public void run() {
 
                 if (getRewardedAd(placement).isReady()) {
-                    ChocolateLogger.i(TAG, "ShowRewardAd (a)");
+                    ChocolateLogger.i(TAG, "ShowRewardedAd (a)");
                     getRewardedAd(placement).showRewardAd(secretCode, userID, rewardName, rewardAmount);
                 } else {
                     tempRewardedAd = new RewardedAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.REWARDED_AD_TYPE, new FreestarAdUnityListener() {
                         @Override
                         public void onFreestarAdEvent(String placement, String adType, String adEvent) {
                             if (isQuitting()) return;
-                            if (adEvent.equals(FreestarAdEventHandler.REWARD_AD_LOADED)) {
+                            if (adEvent.equals(FreestarAdEventHandler.REWARDED_AD_LOADED)) {
                                 tempRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
                             }
                         }
                     }));
-                    ChocolateLogger.i(TAG, "ShowRewardAd (b)");
+                    ChocolateLogger.i(TAG, "ShowRewardedAd (b)");
                     rewardedAdMap.put(placement + "", tempRewardedAd);
                     tempRewardedAd.loadAd(getAdRequest(), placement);
                 }
@@ -448,7 +448,7 @@ public class FreestarPlugin {
         }
     }
 
-    public String GetRewardAdWinner(String placement) {
+    public String GetRewardedAdWinner(String placement) {
         try {
             return getRewardedAd(placement).getWinningPartnerName();
         } catch (Exception e) {

@@ -35,7 +35,7 @@ namespace Freestar
         //And passes the callback to the publisher if delegate is set
         void onFreestarAdEvent(string placement, string adType, string eventName)   //Received Ad Event from Java
         {
-            Debug.Log("Freestar Ad Event In Unity : " + eventName + " : For Ad Type : " + adType + " placement: " + placement);
+            Debug.Log("Freestar Ad Event In Unity: " + eventName + "  AdType: " + adType + " Placement: [" + placement + "]");
             if (FreestarAdDelegateEventHandler != null)
             {
                 FreestarAdDelegateEventHandler(placement, adType, eventName);      //Pass Ad Event to Publisher
