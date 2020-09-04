@@ -17,7 +17,7 @@ class MediationPartners {
 
     private static int numInterstitial = 11;
     private static int numRewarded = 11;
-    private static int numInview = 7;
+    private static int numInview = 8;
     private static int numPreroll = 3;
 
     public static final int ADTYPE_INTERSTITIAL = 0;
@@ -26,7 +26,7 @@ class MediationPartners {
     public static final int ADTYPE_PREROLL = 3;
 
     /**
-     * FULLSCREEN_INTERSTITIAL
+     * INTERSTITIAL
      */
     private static String[] interstitial_partners = new String[numInterstitial];
 
@@ -52,7 +52,7 @@ class MediationPartners {
         }
     }
 
-    public static List<LVDOConstants.PARTNER> setInterstitialPartners(AdRequest adRequest) {
+    private static List<LVDOConstants.PARTNER> setInterstitialPartners(AdRequest adRequest) {
         List<LVDOConstants.PARTNER> list = new ArrayList<>(numInterstitial);
         for (int i = 0; i < numInterstitial; i++) {
             if (interstitial_parters_selected[i]) {
@@ -65,7 +65,7 @@ class MediationPartners {
 
 
     /**
-     * FULLSCREEN_REWARDED
+     * REWARDED
      */
     private static String[] rewarded_partners = new String[numRewarded];
 
@@ -91,7 +91,7 @@ class MediationPartners {
         }
     }
 
-    public static List<LVDOConstants.PARTNER> setRewardedPartners(AdRequest adRequest) {
+    private static List<LVDOConstants.PARTNER> setRewardedPartners(AdRequest adRequest) {
         List<LVDOConstants.PARTNER> list = new ArrayList<>(numRewarded);
         for (int i = 0; i < numRewarded; i++) {
             if (rewarded_parters_selected[i]) {
@@ -115,6 +115,7 @@ class MediationPartners {
         inview_partners[4] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
         inview_partners[5] = LVDOConstants.PARTNER.GOOGLE.name();
         inview_partners[6] = LVDOConstants.PARTNER.MOPUB.name();
+        inview_partners[7] = LVDOConstants.PARTNER.UNITY.name();
     }
 
     private static boolean[] inview_parters_selected = new boolean[numInview];
@@ -125,7 +126,7 @@ class MediationPartners {
         }
     }
 
-    public static List<LVDOConstants.PARTNER> setInviewPartners(AdRequest adRequest) {
+    private static List<LVDOConstants.PARTNER> setInviewPartners(AdRequest adRequest) {
         List<LVDOConstants.PARTNER> list = new ArrayList<>(numInview);
         for (int i = 0; i < numInview; i++) {
             if (inview_parters_selected[i]) {
@@ -155,7 +156,7 @@ class MediationPartners {
         }
     }
 
-    public static List<LVDOConstants.PARTNER> setPrerollPartners(AdRequest adRequest) {
+    private static List<LVDOConstants.PARTNER> setPrerollPartners(AdRequest adRequest) {
         List<LVDOConstants.PARTNER> list = new ArrayList<>(numPreroll);
         for (int i = 0; i < numPreroll; i++) {
             if (preroll_parters_selected[i]) {
@@ -171,7 +172,7 @@ class MediationPartners {
      * @param context
      * @param listener
      */
-    public static void choosePartners(int adUnitType, Context context, DialogInterface.OnClickListener listener) {
+    public static void choosePartners(final Context context, final AdRequest adRequest, final int adUnitType, final DialogInterface.OnClickListener listener) {
         String[] partners;
         boolean[] selected;
         String title;
@@ -186,7 +187,7 @@ class MediationPartners {
         } else if (adUnitType == ADTYPE_INVIEW) {
             partners = inview_partners;
             selected = inview_parters_selected;
-            title = "Native Inview";
+            title = "Display";
         } else {
             partners = preroll_partners;
             selected = preroll_parters_selected;
@@ -200,10 +201,31 @@ class MediationPartners {
 
             }
         })
-            .setPositiveButton("OK", listener)
-            .setNegativeButton("CANCEL", dummyOnClick)
-            .setTitle(title)
-            .show();
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (adUnitType) {
+                            case ADTYPE_INTERSTITIAL:
+                                setInterstitialPartners(adRequest);
+                                break;
+                            case ADTYPE_INVIEW:
+                                setInviewPartners(adRequest);
+                                break;
+                            case ADTYPE_PREROLL:
+                                setPrerollPartners(adRequest);
+                                break;
+                            case ADTYPE_REWARDED:
+                                setRewardedPartners(adRequest);
+                                break;
+                            default:
+                                break;
+                        }
+                        listener.onClick(dialog,which);
+                    }
+                })
+                .setNegativeButton("CANCEL", dummyOnClick)
+                .setTitle(title)
+                .show();
 
     }
 
@@ -217,7 +239,7 @@ class MediationPartners {
     /**
      * @param adUnitType 0:interstitial, 1:rewarded, 2:inview, 3:preroll
      */
-    public static String[] getChosenPartners(int adUnitType) {
+    static String[] getChosenPartners(int adUnitType) {
         String[] partners;
         boolean[] selected;
         String[] chosen;

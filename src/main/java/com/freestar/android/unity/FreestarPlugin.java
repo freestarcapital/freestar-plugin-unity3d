@@ -29,7 +29,7 @@ public class FreestarPlugin {
 
     private static final String TAG = "FreestarPlugin";
 
-    private static final boolean DEBUG_SHOW_CHOOSER = false;
+    private static boolean SHOW_PARTNER_CHOOSER = false;
     private WeakReference<Activity> mActivity;
     private FreestarAdUnityListener mUnityAdListener;
 
@@ -80,6 +80,10 @@ public class FreestarPlugin {
             mAdRequest = new AdRequest(getActivity());
         }
         return mAdRequest;
+    }
+
+    public void ShowPartnerChooser(boolean showPartnerChooser) {
+        SHOW_PARTNER_CHOOSER = showPartnerChooser;
     }
 
     /**
@@ -175,11 +179,10 @@ public class FreestarPlugin {
     }
 
     public void LoadInterstitialAd(final String placement) {
-        if (DEBUG_SHOW_CHOOSER) {
-            MediationPartners.choosePartners(MediationPartners.ADTYPE_INTERSTITIAL, getActivity(), new DialogInterface.OnClickListener() {
+        if (SHOW_PARTNER_CHOOSER) {
+            MediationPartners.choosePartners(getActivity(), getAdRequest(), MediationPartners.ADTYPE_INTERSTITIAL, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    MediationPartners.setInterstitialPartners(getAdRequest());
                     _LoadInterstitialAd(placement);
                 }
             });
@@ -234,11 +237,10 @@ public class FreestarPlugin {
     }
 
     public void LoadRewardedAd(final String placement) {
-        if (DEBUG_SHOW_CHOOSER) {
-            MediationPartners.choosePartners(MediationPartners.ADTYPE_REWARDED, getActivity(), new DialogInterface.OnClickListener() {
+        if (SHOW_PARTNER_CHOOSER) {
+            MediationPartners.choosePartners(getActivity(), getAdRequest(), MediationPartners.ADTYPE_REWARDED, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    MediationPartners.setRewardedPartners(getAdRequest());
                     _LoadRewardedAd(placement);
                 }
             });
