@@ -480,7 +480,26 @@ namespace Freestar
 #endif
         }
 
-        public static string GetRewardedAdWinner(string placement) //TODO
+        public static void ShowPartnerChooser(bool showPartnerChooser) //TODO iOS
+        {
+#if UNITY_ANDROID
+            try
+            {
+                FreestarPlugin.Call("ShowPartnerChooser", showPartnerChooser);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("ShowPartnerChooser failed: " + e);
+            }
+#endif
+
+#if UNITY_IOS
+            Debug.Log("ShowPartnerChooser api not available on iOS yet");
+            return "";
+#endif
+        }
+
+        public static string GetRewardedAdWinner(string placement) //TODO iOS
         {
 #if UNITY_ANDROID
             try
