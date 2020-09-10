@@ -171,8 +171,9 @@ namespace Freestar
 
 #if UNITY_ANDROID
             FreestarPlugin.Call("LoadInterstitialAd", placement);
-        }
 #endif
+        }
+
 
         public static void showInterstitialAd(string placement)
         {
@@ -199,8 +200,8 @@ namespace Freestar
             {
                 FreestarPlugin.Call("LoadRewardedAd", placement);
             }
-        }
 #endif
+        }
 
         public static void showRewardedAd(string placement, int rewardAmount, string rewardName, string userId, string secretKey)
         {
@@ -215,11 +216,11 @@ namespace Freestar
             {
                 FreestarPlugin.Call("ShowRewardedAd", placement, secretKey, userId, rewardName, "" + rewardAmount);
             }
+#endif
         }
-#endif    
 
 
-        public static void SetAdRequestUserParams(int age, string birthDate, string gender, string maritalStatus, string ethnicity,
+            public static void SetAdRequestUserParams(int age, string birthDate, string gender, string maritalStatus, string ethnicity,
                                                       string dmaCode, string postal, string curPostal, string latitude, string longitude)
         {
 
@@ -337,9 +338,9 @@ namespace Freestar
             catch (Exception e)
             {
                 Debug.Log("getCustomSegmentProperty failed: " + e);
-                return null;
             }
 #endif
+            return null;
         }
 
         public static Dictionary<string, string> getAllCustomSegmentProperties()
@@ -366,9 +367,9 @@ namespace Freestar
             catch (Exception e)
             {
                 Debug.Log("getAllCustomSegmentProperties failed: " + e);
-                return null;
             }
 #endif
+            return null;
         }
 
         public static void deleteCustomSegmentProperty(string key)
@@ -495,7 +496,6 @@ namespace Freestar
 
 #if UNITY_IOS
             Debug.Log("ShowPartnerChooser api not available on iOS yet");
-            return "";
 #endif
         }
 
@@ -509,14 +509,13 @@ namespace Freestar
             catch (Exception e)
             {
                 Debug.Log("GetRewardedAdWinner failed: " + e);
-                return "";
             }
 #endif
 
 #if UNITY_IOS
             Debug.Log("GetRewardedAdWinner api not available on iOS yet");
-            return "";
 #endif
+            return "";
         }
 
         public static string GetInterstitialAdWinner(string placement)
@@ -529,14 +528,13 @@ namespace Freestar
             catch (Exception e)
             {
                 Debug.Log("GetInterstitialAdWinner failed: " + e);
-                return "";
             }
 #endif
 
 #if UNITY_IOS
             Debug.Log("GetInterstitialAdWinner api not available on iOS yet");
-            return "";
 #endif
+            return "";
         }
 
 #if UNITY_ANDROID
