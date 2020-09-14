@@ -337,7 +337,7 @@ namespace Freestar
             }
             catch (Exception e)
             {
-                Debug.Log("getCustomSegmentProperty failed: " + e);
+                Debug.Log("getCustomSegmentProperty failed: " + e);                
             }
 #endif
             return null;
@@ -366,7 +366,7 @@ namespace Freestar
             }
             catch (Exception e)
             {
-                Debug.Log("getAllCustomSegmentProperties failed: " + e);
+                Debug.Log("getAllCustomSegmentProperties failed: " + e);                
             }
 #endif
             return null;
