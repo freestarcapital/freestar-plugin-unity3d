@@ -7,7 +7,7 @@ namespace Freestar
     public class FreestarAndroidListener : AndroidJavaProxy
     {
         //Delegate for passing Freestar Ad Events to Publisher
-        public delegate void FreestarAdDelegate(string placement, string adType, string eventName);
+        public delegate void FreestarAdDelegate(string placement, string adType, int adSize, string eventName);
         public event FreestarAdDelegate FreestarAdDelegateEventHandler;
 
         //Singleton listener instance to set the delegate for Ad Event
@@ -33,12 +33,15 @@ namespace Freestar
 
         //This method is called when JAVA Plugin send the Ad Event to the Unity Plugin
         //And passes the callback to the publisher if delegate is set
-        void onFreestarAdEvent(string placement, string adType, string eventName)   //Received Ad Event from Java
+        void onFreestarAdEvent(string placement, string adType, int adSize, string eventName)   //Received Ad Event from Java
         {
-            Debug.Log("Freestar Ad Event In Unity: " + eventName + "  AdType: " + adType + " Placement: [" + placement + "]");
+            Debug.Log("Freestar Ad Event In Unity: "  + eventName
+                                                      + " AdType: " + adType
+                                                      + " AdSize: " + (adSize)
+                                                      + " Placement: [" + placement + "]");
             if (FreestarAdDelegateEventHandler != null)
             {
-                FreestarAdDelegateEventHandler(placement, adType, eventName);      //Pass Ad Event to Publisher
+                FreestarAdDelegateEventHandler(placement, adType, adSize, eventName);      //Pass Ad Event to Publisher
             }
         }
     }

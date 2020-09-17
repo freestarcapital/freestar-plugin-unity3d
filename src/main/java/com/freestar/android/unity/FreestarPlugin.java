@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.freestar.android.ads.AdRequest;
+import com.freestar.android.ads.AdSize;
 import com.freestar.android.ads.ChocolateLogger;
 import com.freestar.android.ads.FreeStarAds;
 import com.freestar.android.ads.InterstitialAd;
@@ -30,15 +32,18 @@ public class FreestarPlugin {
     private static final String TAG = "FreestarPlugin";
 
     private static boolean SHOW_PARTNER_CHOOSER = false;
-    private WeakReference<Activity> mActivity;
-    private FreestarAdUnityListener mUnityAdListener;
+    private WeakReference<Activity> activity;
+    private FreestarAdUnityListener unityAdListener;
 
-    private AdRequest mAdRequest;
+    private AdRequest adRequest;
     private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
     private Map<String, RewardedAd> rewardedAdMap = new HashMap<>();
+    private Map<String, PopupBannerAd> bannerAdMap = new HashMap<>();
 
     private static boolean isRequestInProgress;
     private static long lastRequestTime;
+    private static boolean smallBannerInProgress;
+    private static boolean mrecBannerInProgress;
 
     private static FreestarPlugin freestarPluginInstance;
 
@@ -51,9 +56,21 @@ public class FreestarPlugin {
         if (rewardedAdMap.containsKey(placement)) {
             return rewardedAdMap.get(placement);
         }
-        RewardedAd rewardedAd = new RewardedAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.REWARDED_AD_TYPE, mUnityAdListener));
+        RewardedAd rewardedAd = new RewardedAd(getActivity(),
+                new FreestarAdEventHandler(FreestarConstants.REWARDED_AD_TYPE,
+                        FreestarConstants.FULLSCREEN_AD_SIZE, unityAdListener));
         rewardedAdMap.put(placement, rewardedAd);
         return rewardedAd;
+    }
+
+    private PopupBannerAd getBannerAd(String placement, int adSize) {
+        placement = placement + "";
+        if (bannerAdMap.containsKey(placement+adSize)) {
+            return bannerAdMap.get(placement+adSize);
+        }
+        PopupBannerAd bannerAd = new PopupBannerAd(getActivity());
+        bannerAdMap.put(placement+adSize, bannerAd);
+        return bannerAd;
     }
 
     private InterstitialAd getInterstitialAd(String placement) {
@@ -61,7 +78,10 @@ public class FreestarPlugin {
         if (interstitialAdMap.containsKey(placement)) {
             return interstitialAdMap.get(placement);
         }
-        InterstitialAd interstitialAd = new InterstitialAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.INTERSTITIAL_AD_TYPE, mUnityAdListener));
+        InterstitialAd interstitialAd = new InterstitialAd(getActivity(),
+                new FreestarAdEventHandler(FreestarConstants.INTERSTITIAL_AD_TYPE,
+                        FreestarConstants.FULLSCREEN_AD_SIZE,
+                        unityAdListener));
         interstitialAdMap.put(placement, interstitialAd);
         return interstitialAd;
     }
@@ -76,10 +96,10 @@ public class FreestarPlugin {
     }
 
     private AdRequest getAdRequest() {
-        if (mAdRequest == null) {
-            mAdRequest = new AdRequest(getActivity());
+        if (adRequest == null) {
+            adRequest = new AdRequest(getActivity());
         }
-        return mAdRequest;
+        return adRequest;
     }
 
     public void ShowPartnerChooser(boolean showPartnerChooser) {
@@ -93,13 +113,13 @@ public class FreestarPlugin {
      */
     public void SetActivity(Activity activity) {
         ChocolateLogger.i(TAG, "Unity Activity Set.");
-        mActivity = new WeakReference<>(activity);
+        this.activity = new WeakReference<>(activity);
         getAdRequest();
     }
 
     public void SetUnityAdListener(FreestarAdUnityListener listener) {
         ChocolateLogger.i(TAG, "Unity Listener Set.");
-        mUnityAdListener = listener;
+        unityAdListener = listener;
     }
 
     public void SetAdRequestUserParams(String age, String birthDate, String gender, String maritalStatus,
@@ -109,8 +129,8 @@ public class FreestarPlugin {
         getAdRequest();
 
         try {
-            mAdRequest.setAge(age);
-            mAdRequest.setBirthday(getDate(birthDate));
+            adRequest.setAge(age);
+            adRequest.setBirthday(getDate(birthDate));
         } catch (Exception e) {
             ChocolateLogger.e(TAG, "SetAdRequestUserParams (1):", e);
         }
@@ -119,17 +139,17 @@ public class FreestarPlugin {
             if (TextUtils.isEmpty(gender)) {
                 gender = "";
             }
-            mAdRequest.setGender(gender);
+            adRequest.setGender(gender);
 
             if (TextUtils.isEmpty(maritalStatus)) {
                 maritalStatus = "";
             }
-            mAdRequest.setMaritalStatus(maritalStatus);
+            adRequest.setMaritalStatus(maritalStatus);
 
-            mAdRequest.setEthnicity(ethnicity);
-            mAdRequest.setDmaCode(dmaCode);
-            mAdRequest.setPostalCode(postal);
-            mAdRequest.setCurrPostal(curPostal);
+            adRequest.setEthnicity(ethnicity);
+            adRequest.setDmaCode(dmaCode);
+            adRequest.setPostalCode(postal);
+            adRequest.setCurrPostal(curPostal);
         } catch (Exception e) {
             ChocolateLogger.e(TAG, "SetAdRequestUserParams (2):", e);
         }
@@ -140,7 +160,7 @@ public class FreestarPlugin {
                 Location location = new Location("");
                 location.setLatitude(Double.valueOf(latitude));
                 location.setLongitude(Double.valueOf(longitude));
-                mAdRequest.setLocation(location);
+                adRequest.setLocation(location);
             } catch (Exception e) {
                 ChocolateLogger.e(TAG, "Unity Location Invalid: " + e);
             }
@@ -156,7 +176,7 @@ public class FreestarPlugin {
         if (!TextUtils.isEmpty(hashID)) {
             Set<String> testID = new HashSet<>();
             testID.add(hashID);
-            mAdRequest.setTestDevices(testID);
+            adRequest.setTestDevices(testID);
         }
     }
 
@@ -194,11 +214,11 @@ public class FreestarPlugin {
     private void _LoadInterstitialAd(final String placement) {
 
         if (isQuitting()) return;
-        if (!canRequest()) {
+        if (!canFullscreenRequest()) {
             ChocolateLogger.i(TAG, "Cannot LoadInterstitialAd while another ad is in progress");
             return;
         }
-        markRequest();
+        markFullscreenRequest();
         ChocolateLogger.i(TAG, "LoadInterstitialAd Called.");
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -219,15 +239,19 @@ public class FreestarPlugin {
                     ChocolateLogger.i(TAG, "ShowInterstitialAd (a)");
                     getInterstitialAd(placement).show();
                 } else {
-                    tempInterstitialAd = new InterstitialAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.INTERSTITIAL_AD_TYPE, new FreestarAdUnityListener() {
-                        @Override
-                        public void onFreestarAdEvent(String placement, String adType, String adEvent) {
-                            if (isQuitting()) return;
-                            if (adEvent.equals(FreestarAdEventHandler.INTERSTITIAL_AD_LOADED)) {
-                                tempInterstitialAd.show();
+                    tempInterstitialAd = new InterstitialAd(getActivity(),
+                    new FreestarAdEventHandler(
+                        FreestarConstants.INTERSTITIAL_AD_TYPE,
+                        FreestarConstants.FULLSCREEN_AD_SIZE,
+                        new FreestarAdUnityListener() {
+                            @Override
+                            public void onFreestarAdEvent(String placement, String adType, int adSize, String adEvent) {
+                                if (isQuitting()) return;
+                                if (adEvent.equals(FreestarConstants.INTERSTITIAL_AD_LOADED)) {
+                                    tempInterstitialAd.show();
+                                }
                             }
-                        }
-                    }));
+                        }));
                     ChocolateLogger.i(TAG, "ShowInterstitialAd (b)");
                     interstitialAdMap.put(placement + "", tempInterstitialAd);
                     tempInterstitialAd.loadAd(getAdRequest(), placement);
@@ -252,11 +276,11 @@ public class FreestarPlugin {
     private void _LoadRewardedAd(final String placement) {
 
         if (isQuitting()) return;
-        if (!canRequest()) {
+        if (!canFullscreenRequest()) {
             ChocolateLogger.i(TAG, "Cannot LoadRewardedAd while another ad is in progress");
             return;
         }
-        markRequest();
+        markFullscreenRequest();
         ChocolateLogger.i(TAG, "LoadRewardedAd Called.");
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -299,15 +323,19 @@ public class FreestarPlugin {
                     ChocolateLogger.i(TAG, "ShowRewardedAd (a)");
                     getRewardedAd(placement).showRewardAd(secretCode, userID, rewardName, rewardAmount);
                 } else {
-                    tempRewardedAd = new RewardedAd(getActivity(), new FreestarAdEventHandler(FreestarAdEventHandler.REWARDED_AD_TYPE, new FreestarAdUnityListener() {
-                        @Override
-                        public void onFreestarAdEvent(String placement, String adType, String adEvent) {
-                            if (isQuitting()) return;
-                            if (adEvent.equals(FreestarAdEventHandler.REWARDED_AD_LOADED)) {
-                                tempRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
-                            }
-                        }
-                    }));
+                    tempRewardedAd = new RewardedAd(getActivity(),
+                            new FreestarAdEventHandler(
+                                    FreestarConstants.REWARDED_AD_TYPE,
+                                    FreestarConstants.FULLSCREEN_AD_SIZE,
+                                    new FreestarAdUnityListener() {
+                                        @Override
+                                        public void onFreestarAdEvent(String placement, String adType, int adSize, String adEvent) {
+                                            if (isQuitting()) return;
+                                            if (adEvent.equals(FreestarConstants.REWARDED_AD_LOADED)) {
+                                                tempRewardedAd.showRewardAd(secretCode, userID, rewardName, rewardAmount);
+                                            }
+                                        }
+                                    }));
                     ChocolateLogger.i(TAG, "ShowRewardedAd (b)");
                     rewardedAdMap.put(placement + "", tempRewardedAd);
                     tempRewardedAd.loadAd(getAdRequest(), placement);
@@ -317,10 +345,10 @@ public class FreestarPlugin {
     }
 
     private Activity getActivity() {
-        if (mActivity == null) {
-            mActivity = new WeakReference<>(UnityPlayer.currentActivity);
+        if (activity == null) {
+            activity = new WeakReference<>(UnityPlayer.currentActivity);
         }
-        return mActivity.get();
+        return activity.get();
     }
 
     private Date getDate(String dateString) {
@@ -332,20 +360,29 @@ public class FreestarPlugin {
         }
     }
 
-    static void resetRequest() {
+    static void resetFullscreenRequest() {
         isRequestInProgress = false;
         lastRequestTime = 0;
     }
 
-    private void markRequest() {
+    static void resetBannerAdRequest(int bannerAdSize) {
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50) {
+            smallBannerInProgress = false;
+        }
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
+            mrecBannerInProgress = false;
+        }
+    }
+
+    private void markFullscreenRequest() {
         isRequestInProgress = true;
         lastRequestTime = System.currentTimeMillis();
     }
 
-    private boolean canRequest() {
+    private boolean canFullscreenRequest() {
         if (lastRequestTime == 0 || (System.currentTimeMillis() - lastRequestTime > 60000L)) {
             if (isRequestInProgress) {
-                resetRequest();
+                resetFullscreenRequest();
             }
         }
         return !isRequestInProgress;
@@ -465,6 +502,81 @@ public class FreestarPlugin {
         } catch (Exception e) {
             ChocolateLogger.e(TAG, "GetInterstitialAdWinner failed", e);
             return "";
+        }
+    }
+
+    public void ShowBannerAd(final String placement, final int bannerAdSize, final int bannerAdPosition) {
+        if (SHOW_PARTNER_CHOOSER) {
+            MediationPartners.choosePartners(getActivity(), getAdRequest(), MediationPartners.ADTYPE_INVIEW, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    _ShowBannerAd(placement, bannerAdSize, bannerAdPosition);
+                }
+            });
+        } else {
+            _ShowBannerAd(placement, bannerAdSize, bannerAdPosition);
+        }
+    }
+
+    /**
+     * @param placement
+     * @param bannerAdSize
+     * @param bannerAdPosition
+     */
+    private void _ShowBannerAd(String placement, int bannerAdSize, int bannerAdPosition) {
+
+        ChocolateLogger.i(TAG,"_ShowBannerAd bannerAdSize: " + bannerAdSize);
+
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250 && mrecBannerInProgress) {
+            return; //already in progress
+        }
+
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50 && smallBannerInProgress) {
+            return; //already in progress
+        }
+
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
+            mrecBannerInProgress = true;
+        }
+
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50) {
+            smallBannerInProgress = true;
+        }
+
+        if (IsBannerAdShowing(placement, bannerAdSize)) {
+            CloseBannerAd(placement, bannerAdSize);
+        }
+
+        final PopupBannerAd bannerAd = getBannerAd(placement, bannerAdSize);
+        AdSize adSize = bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250 ? AdSize.MEDIUM_RECTANGLE_300_250
+                : AdSize.BANNER_320_50;
+        bannerAd.loadBannerAd(getAdRequest(), adSize, placement, bannerAdPosition,
+                new FreestarAdEventHandler(
+                        FreestarConstants.BANNER_AD_TYPE,
+                        bannerAdSize,
+                        unityAdListener)
+                        {
+                            @Override
+                            public void onBannerAdLoaded(View bannerAdView, String placement) {
+                                bannerAd.showBannerAd(bannerAdView);
+                                super.onBannerAdLoaded(bannerAdView, placement);
+                            }
+                        });
+    }
+
+    public boolean IsBannerAdShowing(String placement, int adSize) {
+        if (bannerAdMap.containsKey(placement + adSize)) {
+            return bannerAdMap.get(placement + adSize).isShowing();
+        }
+        return false;
+    }
+
+    public void CloseBannerAd(String placement, int adSize) {
+        if (bannerAdMap.containsKey(placement + adSize)) {
+            if (bannerAdMap.get(placement + adSize).isShowing()) {
+                bannerAdMap.get(placement + adSize).destroy();
+            }
+            bannerAdMap.remove(placement + adSize);
         }
     }
 }

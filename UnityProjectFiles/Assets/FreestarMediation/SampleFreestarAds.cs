@@ -12,7 +12,7 @@ using Freestar;
 namespace Freestar
 {
 
-    public class SampleFreestarAds : MonoBehaviour, FreestarRewardedAdCallbackReceiver, FreestarInterstitialAdCallbackReceiver
+    public class SampleFreestarAds : MonoBehaviour, FreestarRewardedAdCallbackReceiver, FreestarInterstitialAdCallbackReceiver, FreestarBannerAdCallbackReceiver
     {
 
         private const string TAG = "SampleFreestarAds";
@@ -41,6 +41,7 @@ namespace Freestar
 
             FreestarUnityBridge.setInterstitialAdListener(this);
             FreestarUnityBridge.setRewardedAdListener(this);
+            FreestarUnityBridge.setBannerAdListener(this);
         }
 
         public void onInterstitialAdLoaded(string placement)
@@ -93,6 +94,22 @@ namespace Freestar
             //TODO: OR REWARD THE USER HERE
         }
 
+        public void onBannerAdShowing(string placement, int adSize)
+        {
+            log("onBannerAdShowing placement=[" + placement + "] adSize: "+ adSize);
+        }
+
+        public void onBannerAdClicked(string placement, int adSize)
+        {
+            log("onBannerAdClicked placement=[" + placement + "] adSize: " + adSize);
+        }
+
+        public void onBannerAdFailed(string placement, int adSize)
+        {
+            log("onBannerAdFailed placement=[" + placement + "] adSize: " + adSize);
+        }
+
+
         //===============Interstitial Ad Methods===============
 
         public void loadInterstitialAd()     //called when Interstitial button clicked
@@ -105,6 +122,24 @@ namespace Freestar
         {
             log("Show Interstitial Ad...");
             FreestarUnityBridge.showInterstitialAd("");
+        }
+
+        public void loadSmallBannerAd()
+        {
+            log("Load Small Banner Ad...");
+            if (FreestarUnityBridge.IsBannerAdShowing(null, FreestarConstants.BANNER_AD_SIZE_300x250))
+                FreestarUnityBridge.CloseBannerAd(null, FreestarConstants.BANNER_AD_SIZE_300x250);
+
+            FreestarUnityBridge.ShowBannerAd(null, FreestarConstants.BANNER_AD_SIZE_320x50, FreestarConstants.BANNER_AD_POSITION_BOTTOM);
+        }
+
+        public void loadMRECBannerAd()
+        {
+            log("Load MREC Banner Ad...");
+            if (FreestarUnityBridge.IsBannerAdShowing(null, FreestarConstants.BANNER_AD_SIZE_320x50))
+                FreestarUnityBridge.CloseBannerAd(null, FreestarConstants.BANNER_AD_SIZE_320x50);
+
+            FreestarUnityBridge.ShowBannerAd(null, FreestarConstants.BANNER_AD_SIZE_300x250, FreestarConstants.BANNER_AD_POSITION_BOTTOM);
         }
 
         //===============Rewarded Video Ad Methods===============
