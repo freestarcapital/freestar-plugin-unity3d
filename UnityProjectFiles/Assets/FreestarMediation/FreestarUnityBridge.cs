@@ -25,6 +25,12 @@ namespace Freestar
         void onRewardedAdDismissed(string placement);
     }
 
+    public interface FreestarBannerAdCallbackReceiver
+    {
+        void onBannerAdShowing(string placement, int adSize);
+        void onBannerAdClicked(string placement, int adSize);
+        void onBannerAdFailed(string placement, int adSize);
+    }
 
     public class FreestarUnityBridge : MonoBehaviour
     {
@@ -114,6 +120,7 @@ namespace Freestar
 
         private static FreestarInterstitialAdCallbackReceiver interRec;
         private static FreestarRewardedAdCallbackReceiver rewardRec;
+        private static FreestarBannerAdCallbackReceiver bannerRec;
 
         public static void initWithAPIKey(string apiKey)
         {
@@ -124,6 +131,18 @@ namespace Freestar
 #if UNITY_ANDROID
             FreestarPlugin.Call("Init", apiKey);
 #endif
+        }
+
+        public static void setBannerAdListener(FreestarBannerAdCallbackReceiver listener)
+        {
+#if UNITY_IOS
+            //_setupWithListener(listener.ToString());  TODO
+#endif
+
+#if UNITY_ANDROID
+            bannerRec = listener;
+#endif
+
         }
 
         public static void setInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
@@ -163,6 +182,13 @@ namespace Freestar
 #endif
         }
 
+        public static void removeBannerAdListener()
+        {
+#if UNITY_ANDROID
+            bannerRec = null;
+#endif
+        }
+
         public static void loadInterstitialAd(string placement)
         {
 #if UNITY_IOS
@@ -173,7 +199,6 @@ namespace Freestar
             FreestarPlugin.Call("LoadInterstitialAd", placement);
 #endif
         }
-
 
         public static void showInterstitialAd(string placement)
         {
@@ -219,8 +244,7 @@ namespace Freestar
 #endif
         }
 
-
-            public static void SetAdRequestUserParams(int age, string birthDate, string gender, string maritalStatus, string ethnicity,
+        public static void SetAdRequestUserParams(int age, string birthDate, string gender, string maritalStatus, string ethnicity,
                                                       string dmaCode, string postal, string curPostal, string latitude, string longitude)
         {
 
@@ -539,50 +563,53 @@ namespace Freestar
 
 #if UNITY_ANDROID
 
-        private static void onFreestarEventReceiver(string placement, string adType, string eventName)
+        private static void onFreestarEventReceiver(string placement, string adType, int adSize, string eventName)
         {
-            Debug.Log("Ad Event Received: " + eventName + "  AdType: " + adType + "  Placement: [" + placement + "]");
-            if (eventName == "INTERSTITIAL_AD_LOADED")
+            Debug.Log("Ad Event Received: " + eventName
+            + "  AdType: " + adType
+            + "  AdSize: " + adSize
+            + "  Placement: [" + placement + "]");
+            if (eventName == FreestarConstants.INTERSTITIAL_AD_LOADED)
             {
                 interRec.onInterstitialAdLoaded(placement);
             }
-            else if (eventName == "INTERSTITIAL_AD_FAILED")
+            else if (eventName == FreestarConstants.INTERSTITIAL_AD_FAILED)
             {
                 interRec.onInterstitialAdFailed(placement);
             }
-            else if (eventName == "INTERSTITIAL_AD_SHOWN")
+            else if (eventName == FreestarConstants.INTERSTITIAL_AD_SHOWN)
             {
                 interRec.onInterstitialAdShown(placement);
             }
-            else if (eventName == "INTERSTITIAL_AD_DISMISSED")
+            else if (eventName == FreestarConstants.INTERSTITIAL_AD_DISMISSED)
             {
                 interRec.onInterstitialAdDismissed(placement);
             }
-            else if (eventName == "INTERSTITIAL_AD_CLICKED")
+            else if (eventName == FreestarConstants.INTERSTITIAL_AD_CLICKED)
             {
                 interRec.onInterstitialAdClicked(placement);
             }
-            else if (eventName == "REWARDED_AD_LOADED")
+            else if (eventName == FreestarConstants.REWARDED_AD_LOADED)
             {
                 rewardRec.onRewardedAdLoaded(placement);
             }
-            else if (eventName == "REWARDED_AD_FAILED")
+            else if (eventName == FreestarConstants.REWARDED_AD_FAILED)
             {
                 rewardRec.onRewardedAdFailed(placement);
             }
-            else if (eventName == "REWARDED_AD_SHOWN")
+            else if (eventName == FreestarConstants.REWARDED_AD_SHOWN)
             {
                 rewardRec.onRewardedAdShown(placement);
             }
-            else if (eventName == "REWARDED_AD_SHOWN_ERROR")
+            else if (eventName == FreestarConstants.REWARDED_AD_SHOWN_ERROR)
             {
                 rewardRec.onRewardedAdFailed(placement);
             }
-            else if (eventName == "REWARDED_AD_DISMISSED")
+            else if (eventName == FreestarConstants.REWARDED_AD_DISMISSED)
             {
                 rewardRec.onRewardedAdDismissed(placement);
             }
-            else if (eventName == "REWARDED_AD_COMPLETED")
+            else if (eventName == FreestarConstants.REWARDED_AD_COMPLETED)
             {
                 rewardRec.onRewardedAdFinished(placement);
                 //If you setup server-to-server (S2S) rewarded callbacks you can
@@ -590,7 +617,105 @@ namespace Freestar
                 //Or you may choose to reward your user from the client here.
 
             }
+            else if (eventName == FreestarConstants.BANNER_AD_SHOWING)
+            {
+                bannerRec.onBannerAdShowing(placement, adSize);
+            }
+            else if (eventName == FreestarConstants.BANNER_AD_FAILED)
+            {
+                bannerRec.onBannerAdFailed(placement, adSize);
+            }
+            else if (eventName == FreestarConstants.BANNER_AD_CLICKED)
+            {
+                bannerRec.onBannerAdClicked(placement, adSize);
+            }
+
         }
+
 #endif
+
+        /**
+         * Placement:           ad unit placement (can pass in null if you don't have one)
+         * 
+         * bannerAdSize:        Choose from:
+         *                      FreestarConstants.BANNER_AD_SIZE_320x50 
+         *                      FreestarConstants.BANNER_AD_SIZE_300x250 
+         *                   
+         * bannerAdPosition:    Choose from:
+         *                      FreestarConstants.BANNER_AD_POSITION_BOTTOM
+         *                      FreestarConstants.BANNER_AD_POSITION_MIDDLE
+         *                      FreestarConstants.BANNER_AD_POSITION_TOP
+         */
+        public static void ShowBannerAd(string placement, int bannerAdSize, int bannerAdPosition)
+        {
+#if UNITY_ANDROID
+            try
+            {
+                FreestarPlugin.Call("ShowBannerAd", placement, bannerAdSize, bannerAdPosition);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("ShowBannerAd failed: " + e);
+            }
+#endif
+
+#if UNITY_IOS
+            Debug.Log("ShowBannerAd"); //TODO
+#endif
+        }
+
+        /**
+         * Placement:           ad unit placement (can pass in null if you don't have one)
+         * 
+         * bannerAdSize:        Choose from:
+         *                      FreestarConstants.BANNER_AD_SIZE_320x50 
+         *                      FreestarConstants.BANNER_AD_SIZE_300x250 
+         *
+         */
+        public static bool IsBannerAdShowing(string placement, int bannerAdSize)
+        {
+#if UNITY_ANDROID
+            try
+            {
+                return FreestarPlugin.Call<bool>("IsBannerAdShowing", placement, bannerAdSize);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("ShowBannerAd failed: " + e);
+                return false;
+            }
+#endif
+
+#if UNITY_IOS
+            Debug.Log("IsBannerAdShowing"); //TODO
+#endif
+        }
+
+        /**
+         * Placement:           ad unit placement (can pass in null if you don't have one)
+         * 
+         * bannerAdSize:        Choose from:
+         *                      FreestarConstants.BANNER_AD_SIZE_320x50 
+         *                      FreestarConstants.BANNER_AD_SIZE_300x250 
+         *
+         */
+        public static void CloseBannerAd(string placement, int bannerAdSize)
+        {
+#if UNITY_ANDROID
+            try
+            {
+                FreestarPlugin.Call("CloseBannerAd", placement, bannerAdSize);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("CloseBannerAd failed: " + e);
+            }
+#endif
+
+#if UNITY_IOS
+            Debug.Log("CloseBannerAd"); //TODO
+#endif
+        }
     }
+
 }

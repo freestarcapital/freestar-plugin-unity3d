@@ -1,5 +1,8 @@
 # freestar-plugin-unity3d
 
-Unity3D package that provides Freestar mediation ads for Unity3D Games and Apps
+This repo does the following:
 
-Pertains to iOS and Android
+- Contains FreestarMediationPlugin.unitypackage (for reference purposes)
+- Produces unity-plugin.aar, specific to Android
+- UnityProjectFiles: contains files that will go into FreestarMediationPlugin.unitypackage
+  - Assets folder contain common Unity source that will be shared with iOS and Android
