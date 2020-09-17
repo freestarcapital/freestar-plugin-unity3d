@@ -37,7 +37,7 @@ namespace Freestar
         {
             Debug.Log("Freestar Ad Event In Unity: "  + eventName
                                                       + " AdType: " + adType
-                                                      + " AdSize: " + (adSize)
+                                                      + " AdSize: " + adSize
                                                       + " Placement: [" + placement + "]");
             if (FreestarAdDelegateEventHandler != null)
             {

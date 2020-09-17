@@ -1,7 +1,7 @@
 <dependencies>
   <androidPackages>
 
-    <androidPackage spec="com.freestar.android.unity:unity-plugin-beta:1.2.10">
+    <androidPackage spec="com.freestar.android.unity:unity-plugin-beta:1.2.14">
     </androidPackage>
 
     <androidPackage spec="com.freestar.android.ads:freestar-pre-androidx:3.2.8">
