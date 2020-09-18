@@ -41,6 +41,21 @@ class PopupBannerAd {
         return bannerAd != null && bannerAd.isAttachedToWindow();
     }
 
+    public void onResume() {
+        try {
+            bannerAd.onResume();
+        }catch (Throwable t) {
+            //ignored
+        }
+    }
+    public void onPause() {
+        try {
+            bannerAd.onPause();
+        }catch (Throwable t) {
+            //ignored
+        }
+    }
+
     public void destroy() {
         try {
             wm.removeView(bannerAd);
@@ -69,7 +84,7 @@ class PopupBannerAd {
         params.flags =
                 // this is to keep button presses going to the background window
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        // this is to enable the notification to recieve touch events
+                        // this is to enable the notification to receive touch events
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         params.format = PixelFormat.TRANSLUCENT;
         if (location == FreestarConstants.BANNER_AD_POSITION_TOP) {
