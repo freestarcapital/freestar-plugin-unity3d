@@ -579,4 +579,16 @@ public class FreestarPlugin {
             bannerAdMap.remove(placement + adSize);
         }
     }
+
+    public void OnResume() {
+        for (String key : bannerAdMap.keySet()) {
+            bannerAdMap.get(key).onResume();
+        }
+    }
+
+    public void OnPause() {
+        for (String key : bannerAdMap.keySet()) {
+            bannerAdMap.get(key).onPause();
+        }
+    }
 }

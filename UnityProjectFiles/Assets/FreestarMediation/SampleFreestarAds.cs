@@ -39,9 +39,21 @@ namespace Freestar
            FreestarUnityBridge.initWithAPIKey("X4mdFv");  //iOS TEST KEY  Replace with yours in production.
 #endif
 
+            FreestarUnityBridge.setBannerAdListener(this);
             FreestarUnityBridge.setInterstitialAdListener(this);
             FreestarUnityBridge.setRewardedAdListener(this);
-            FreestarUnityBridge.setBannerAdListener(this);
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus)
+            {
+                FreestarUnityBridge.Resume();
+            }
+            else
+            {
+                FreestarUnityBridge.Pause();
+            }
         }
 
         public void onInterstitialAdLoaded(string placement)
@@ -177,6 +189,7 @@ namespace Freestar
         //Be sure to unRegister before loading a new scene.
         private void unRegisterAdListener()
         {
+            FreestarUnityBridge.removeBannerAdListener();
             FreestarUnityBridge.removeRewardedAdListener();
             FreestarUnityBridge.removeInterstitialAdListener();
         }

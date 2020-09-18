@@ -27,7 +27,7 @@ ext {
     libraryDescription = 'Freestar Platform android sdk'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/SDK_documentation_android.git'
-    libraryVersion = '1.2.14'  //CHANGE
+    libraryVersion = '1.2.15'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'vdopia developer'
     developerEmail = 'sdk@freestar.io'
