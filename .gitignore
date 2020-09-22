@@ -11,3 +11,5 @@
 /captures
 .sonar
 sonar-project.properties
+*.meta
+[tT]emp/

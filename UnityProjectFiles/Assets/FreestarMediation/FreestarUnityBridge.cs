@@ -44,16 +44,16 @@ namespace Freestar
     		extern static public void _setupWithListener(string listenerName);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
-    		extern static public void _loadInterstitialAd();
+    		extern static public void _loadInterstitialAd(string placement);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _showInterstitialAd();
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
-    		extern static public void _loadRewardAd();
+    		extern static public void _loadRewardedAd(string placement);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
-    		extern static public void _showRewardAd(int rewardAmount, string rewardName, string userId, string secretKey);
+    		extern static public void _showRewardedAd(string placement, int rewardAmount, string rewardName, string userId, string secretKey);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setDemograpics(int age, string birthDate, string gender, string maritalStatus,
@@ -232,7 +232,7 @@ namespace Freestar
         {
 
 #if UNITY_IOS
-            _showRewardAd(placement, rewardAmount, rewardName, userId, secretKey);
+            _showRewardedAd(placement, rewardAmount, rewardName, userId, secretKey);
 #endif
 
 #if UNITY_ANDROID
@@ -688,7 +688,9 @@ namespace Freestar
 
 #if UNITY_IOS
             Debug.Log("IsBannerAdShowing"); //TODO
+            
 #endif
+            return false;
         }
 
         /**
