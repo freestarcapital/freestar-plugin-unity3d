@@ -1,10 +1,10 @@
 <dependencies>
   <androidPackages>
 
-    <androidPackage spec="com.freestar.android.unity:unity-plugin-beta:1.2.14">
+    <androidPackage spec="com.freestar.android.unity:unity-plugin:1.2.15">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads:freestar-pre-androidx:3.2.8">
+    <androidPackage spec="com.freestar.android.ads:freestar-pre-androidx:3.2.9">
       <repositories>
         <repository>https://dl.bintray.com/vdopiacorp/fsdk</repository>
       </repositories>

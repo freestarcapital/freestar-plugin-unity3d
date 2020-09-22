@@ -20,17 +20,17 @@ apply plugin: 'com.android.library'
  */
 ext {
     bintrayRepo = 'fsdk' // repo name
-    bintrayName = 'unity-plugin-beta' // CHANGE PER SDK TYPE
+    bintrayName = 'unity-plugin' // CHANGE PER SDK TYPE
     publishedGroupId = 'com.freestar.android.unity' // maven group id
     libraryName = "$bintrayRepo"  // same as repo name
     artifact = "$bintrayName" // maven artifact name; same as bintrayName
     libraryDescription = 'Freestar Platform android sdk'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/SDK_documentation_android.git'
-    libraryVersion = '1.2.14'  //CHANGE
+    libraryVersion = '1.2.15'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'vdopia developer'
-    developerEmail = 'sdk@freestar.io'
+    developerEmail = 'support@freestar.io'
     licenseName = 'The Apache  Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]

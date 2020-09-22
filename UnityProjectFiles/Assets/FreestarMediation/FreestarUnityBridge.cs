@@ -718,6 +718,35 @@ namespace Freestar
             Debug.Log("CloseBannerAd"); //TODO
 #endif
         }
+
+        public static void Pause()
+        {
+#if UNITY_ANDROID
+            try
+            {
+                FreestarPlugin.Call("OnPause");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("FreestarPlugin OnPause failed: " + e);
+            }
+#endif
+        }
+
+        public static void Resume() 
+        {
+#if UNITY_ANDROID
+            try
+            {
+                FreestarPlugin.Call("OnResume");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("FreestarPlugin OnResume failed: " + e);
+            }
+#endif
+        }
+
     }
 
 }
