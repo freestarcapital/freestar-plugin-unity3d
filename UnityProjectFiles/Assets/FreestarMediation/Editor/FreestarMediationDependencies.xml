@@ -57,11 +57,17 @@
 
   </androidPackages>
 
-  <!--<iosPods>-->
-  <!--<iosPod name="Google-Mobile-Ads-SDK" version="~> 7.41">-->
-  <!--<sources>-->
-  <!--<source>https://github.com/CocoaPods/Specs</source>-->
-  <!--</sources>-->
-  <!--</iosPod>-->
-  <!--</iosPods>-->
+  <iosPods>
+    <iosPod name="FreestarAds" version="~> 3.4"></iosPod>
+    <iosPod name="FreestarAds-AdColony" version="~> 3.0"></iosPod>
+    <iosPod name="FreestarAds-AppLovin" version="~> 3.0"></iosPod>
+    <iosPod name="FreestarAds-Tapjoy" version="~> 3.0"></iosPod>
+    <iosPod name="FreestarAds-Unity" version="~> 4.0"></iosPod>
+    <iosPod name="FreestarAds-Googleadmob" version="~> 2.0"></iosPod>
+    <iosPod name="FreestarAds-Vungle" version="~> 3.0"></iosPod>
+    <iosPod name="FreestarAds-Amazon" version="~> 2.0"></iosPod>
+    <iosPod name="FreestarAds-GAM" version="~> 1.0"></iosPod>
+    <iosPod name="FreestarAds-Criteo" version="~> 1.0"></iosPod>
+    <iosPod name="FreestarAds-Facebook" version="~> 3.1"></iosPod>
+  </iosPods>
 </dependencies>
