@@ -39,35 +39,47 @@ UIViewController *topViewController() {
 }
 
 
-static NSString *unityListenerName = nil;
+
 static NSMutableDictionary *interstitialListeners = nil;
 static NSMutableDictionary *rewardListeners = nil;
 static NSString *bannerListenerName = nil;
+static NSString *interstitialListenerName = nil;
+static NSString *rewardedListenerName = nil;
 
 static NSMutableDictionary *bannerListeners = nil;
 
-
-void _initWithAPIKey(char *apiKey) {
-    [Freestar initWithAdUnitID:[NSString stringWithCString:apiKey encoding:NSASCIIStringEncoding]];
+NSString *convertString(char* source) {
+    return source ?
+        [NSString stringWithCString:source encoding:NSASCIIStringEncoding] :
+        @"";
 }
 
-void _setupWithListener(char *listenerName) {
-    unityListenerName = [[[NSString stringWithCString:listenerName encoding:NSASCIIStringEncoding] componentsSeparatedByString:@" "] firstObject];
+
+void _initWithAPIKey(char *apiKey) {
+    [Freestar initWithAdUnitID:convertString(apiKey )];
+}
+
+void _setInterstitialListener(char *listenerName) {
+    interstitialListenerName = convertString(listenerName);
+}
+
+void _setRewardedListener(char *listenerName) {
+    rewardedListenerName = convertString(listenerName);
 }
 
 void _setBannerListener(char *listenerName) {
-    bannerListenerName = [NSString stringWithCString:listenerName encoding:NSASCIIStringEncoding];
+    bannerListenerName = convertString(listenerName );
 }
 
 void _loadInterstitialAd(char *placement) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     if (interstitialListeners == nil) {
         interstitialListeners = [[NSMutableDictionary alloc] init];
     }
     
     FreestarUnityInterstitialAdListener *listener = interstitialListeners[placementString];
     if(listener == nil) {
-        listener = [[FreestarUnityInterstitialAdListener alloc] initWithUnityListenerName:unityListenerName];
+        listener = [[FreestarUnityInterstitialAdListener alloc] initWithUnityListenerName:interstitialListenerName];
         interstitialListeners[placementString] = listener;
     }
     
@@ -76,20 +88,20 @@ void _loadInterstitialAd(char *placement) {
 }
 
 void _showInterstitialAd(char *placement) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     FreestarUnityInterstitialAdListener *listener = interstitialListeners[placementString];
     [listener.ad showFrom:topViewController()];
 }
 
 void _loadRewardedAd(char *placement) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     if (rewardListeners == nil) {
         rewardListeners = [[NSMutableDictionary alloc] init];
     }
     
     FreestarUnityRewardAdListener *listener = rewardListeners[placementString];
     if(listener == nil) {
-        listener = [[FreestarUnityRewardAdListener alloc] initWithUnityListenerName:unityListenerName];
+        listener = [[FreestarUnityRewardAdListener alloc] initWithUnityListenerName:rewardedListenerName];
         rewardListeners[placementString] = listener;
     }
     
@@ -100,12 +112,12 @@ void _loadRewardedAd(char *placement) {
 
 void _showRewardedAd(char* placement, int rewardAmount,char* rewardName, char* userId, char* secretKey) {
     FreestarReward *rew = [FreestarReward blankReward];
-    rew.rewardName = [NSString stringWithCString:rewardName encoding:NSASCIIStringEncoding];
+    rew.rewardName = convertString(rewardName );
     rew.rewardAmount = rewardAmount;
-    rew.userID = [NSString stringWithCString:userId encoding:NSASCIIStringEncoding];
-    rew.secretKey = [NSString stringWithCString:secretKey encoding:NSASCIIStringEncoding];
+    rew.userID = convertString(userId );
+    rew.secretKey = convertString(secretKey );
     
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     FreestarUnityRewardAdListener *listener = rewardListeners[placementString];
     listener.ad.reward = rew;
     [listener.ad showFrom:topViewController()];
@@ -116,7 +128,7 @@ void _setDemograpics(int age, char* birthDate, char* gender, char* maritalStatus
     FreestarDemographics *dem = [Freestar demographics];
     dem.age = age;
     
-    NSArray<NSString*> *comps = [[NSString stringWithCString:birthDate encoding:NSASCIIStringEncoding] componentsSeparatedByString:@"-"];
+    NSArray<NSString*> *comps = [convertString(birthDate ) componentsSeparatedByString:@"-"];
     if(comps.count >= 3){
         NSInteger year = [comps[0] integerValue];
         NSInteger month = [comps[1] integerValue];
@@ -126,7 +138,7 @@ void _setDemograpics(int age, char* birthDate, char* gender, char* maritalStatus
         }
     }
     
-    NSString *msNS = [NSString stringWithCString:maritalStatus encoding:NSASCIIStringEncoding];
+    NSString *msNS = convertString(maritalStatus );
     if([msNS rangeOfString:@"single" options:NSCaseInsensitiveSearch].location != NSNotFound){
         dem.maritalStatus = FreestarMaritalStatusSingle;
     }else if([msNS rangeOfString:@"married" options:NSCaseInsensitiveSearch].location != NSNotFound){
@@ -141,7 +153,7 @@ void _setDemograpics(int age, char* birthDate, char* gender, char* maritalStatus
         dem.maritalStatus = FreestarMaritalStatusOther;
     }
     
-    NSString *genderString = [NSString stringWithCString:gender encoding:NSASCIIStringEncoding];
+    NSString *genderString = convertString(gender );
     
     NSRange maleRange = [genderString rangeOfString:@"Male" options:NSCaseInsensitiveSearch];
     NSRange feMaleRange = [genderString rangeOfString:@"Female" options:NSCaseInsensitiveSearch];
@@ -154,25 +166,25 @@ void _setDemograpics(int age, char* birthDate, char* gender, char* maritalStatus
         dem.gender = FreestarGenderOther;
     }
 
-    dem.ethnicity = [NSString stringWithCString:ethnicity encoding:NSASCIIStringEncoding];
+    dem.ethnicity = convertString(ethnicity );
 }
 
 void _setLocation(char* dmaCode, char* postal, char* curPostal, char* latitude, char* longitude) {
     FreestarLocation *loc = [Freestar location];
     
     if(dmaCode){
-        loc.dmacode = [NSString stringWithCString:dmaCode encoding:NSASCIIStringEncoding];
+        loc.dmacode = convertString(dmaCode );
     }
     if(postal){
-        loc.postalcode = [NSString stringWithCString:postal encoding:NSASCIIStringEncoding];
+        loc.postalcode = convertString(postal );
     }
     if(curPostal){
-        loc.currpostal = [NSString stringWithCString:curPostal encoding:NSASCIIStringEncoding];
+        loc.currpostal = convertString(curPostal );
     }
     
     if(latitude && longitude){
-        NSString *latString = [NSString stringWithCString:latitude encoding:NSASCIIStringEncoding];
-        NSString *lonString = [NSString stringWithCString:longitude encoding:NSASCIIStringEncoding];
+        NSString *latString = convertString(latitude );
+        NSString *lonString = convertString(longitude );
         CLLocation *LocationAtual = [[CLLocation alloc] initWithLatitude:[latString floatValue] longitude:[lonString floatValue]];
     
     
@@ -184,7 +196,7 @@ void _setLocation(char* dmaCode, char* postal, char* curPostal, char* latitude, 
 void _setPrivacySettings(_Bool gdprApplies, char* gdprConsentString) {
     NSString *consentString = nil;
     if(gdprConsentString){
-        consentString = [NSString stringWithCString:gdprConsentString encoding:NSASCIIStringEncoding];
+        consentString = convertString(gdprConsentString );
     }
     
     [[Freestar privacySettings]
@@ -195,14 +207,14 @@ void _setPrivacySettings(_Bool gdprApplies, char* gdprConsentString) {
 #pragma mark - custom segment properties
 
 void _setCustomSegmentProperty(char* key, char* value) {
-    NSString *pKey = [NSString stringWithCString:key encoding:NSASCIIStringEncoding];
-    NSString *pVal = [NSString stringWithCString:value encoding:NSASCIIStringEncoding];
+    NSString *pKey = convertString(key );
+    NSString *pVal = convertString(value );
     [FreestarCustomSegmentProperties
      setCustomSegmentProperty:pKey with:pVal];
 }
 
 const char* _Nullable _getCustomSegmentProperty(char* key) {
-    NSString *pKey = [NSString stringWithCString:key encoding:NSASCIIStringEncoding];
+    NSString *pKey = convertString(key );
     NSString *pVal = [FreestarCustomSegmentProperties getCustomSegmentProperty:pKey];
     return [pVal cStringUsingEncoding:NSASCIIStringEncoding];
 }
@@ -221,7 +233,7 @@ const char* _Nullable _getAllCustomSegmentProperties(void) {
 
 
 void _deleteCustomSegmentProperty(char* key) {
-    NSString *pKey = [NSString stringWithCString:key encoding:NSASCIIStringEncoding];
+    NSString *pKey = convertString(key );
 
     [FreestarCustomSegmentProperties deleteCustomSegmentProperty:pKey];
 }
@@ -231,14 +243,14 @@ void _deleteAllCustomSegmentProperties(void) {
 }
 
 void _closeBannerAd(char* placement, int bannerAdSize) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     FreestarUnityBannerAdListener *listener = bannerListeners[placementString];
     [listener.ad removeFromSuperview];
     bannerListeners[placementString] = nil;
 }
 
 void _showBannerAd(char* placement, int bannerAdSize, int bannerAdPosition) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement );
     if (bannerListeners == nil) {
         bannerListeners = [[NSMutableDictionary alloc] init];
     }
@@ -259,7 +271,7 @@ void _showBannerAd(char* placement, int bannerAdSize, int bannerAdPosition) {
 }
 
 bool _isBannerAdShowing(char* placement, int bannerAdSize) {
-    NSString *placementString = [NSString stringWithCString:placement encoding:NSASCIIStringEncoding];
+    NSString *placementString = convertString(placement);
     FreestarUnityBannerAdListener *listener = bannerListeners[placementString];
     
     if(listener == nil) {

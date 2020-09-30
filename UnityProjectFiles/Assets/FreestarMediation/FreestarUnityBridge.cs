@@ -41,7 +41,10 @@ namespace Freestar
     		extern static public void _initWithAPIKey(string apiKey);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
-    		extern static public void _setupWithListener(string listenerName);
+    		extern static public void _setInterstitialListener(string listenerName);
+
+            [System.Runtime.InteropServices.DllImport("__Internal")]
+    		extern static public void _setRewardedListener(string listenerName);
 
             [System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setBannerListener(string listenerName);
@@ -141,6 +144,9 @@ namespace Freestar
         }
 
         private static FreestarIOSBannerMessagePasser bannerMiddleman;
+        private static FreestarIOSInterstitialMessagePasser interstitialMiddleman;
+        private static FreestarIOSRewardedMessagePasser rewardedMiddleman;
+
 
         public static void setBannerAdListener(FreestarBannerAdCallbackReceiver listener)
         {
@@ -149,7 +155,7 @@ namespace Freestar
             bannerMiddleman = obj.AddComponent<FreestarIOSBannerMessagePasser>();
             bannerMiddleman.receiver = listener;
             Debug.Log("middleman object is " + bannerMiddleman.ToString());
-            bannerMiddleman.name = "FSTRMiddle" + listener.ToString();
+            bannerMiddleman.name = "FSTRMiddleBanner" + listener.ToString();
             _setBannerListener(bannerMiddleman.name);
 #endif
 
@@ -162,7 +168,11 @@ namespace Freestar
         public static void setInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
         {
 #if UNITY_IOS
-            _setupWithListener(listener.ToString());
+            GameObject obj = new GameObject();
+            interstitialMiddleman = obj.AddComponent<FreestarIOSInterstitialMessagePasser>();
+            interstitialMiddleman.receiver = listener;
+            interstitialMiddleman.name = "FSTRMiddleInterstitial" + listener.ToString();
+            _setInterstitialListener(interstitialMiddleman.name);
 #endif
 
 #if UNITY_ANDROID
@@ -174,7 +184,11 @@ namespace Freestar
         public static void setRewardedAdListener(FreestarRewardedAdCallbackReceiver listener)
         {
 #if UNITY_IOS
-            _setupWithListener(listener.ToString());
+            GameObject obj = new GameObject();
+            rewardedMiddleman = obj.AddComponent<FreestarIOSRewardedMessagePasser>();
+            rewardedMiddleman.receiver = listener;
+            rewardedMiddleman.name = "FSTRMiddleRewarded" + listener.ToString();
+            _setRewardedListener(rewardedMiddleman.name);
 #endif
 
 #if UNITY_ANDROID
@@ -188,7 +202,7 @@ namespace Freestar
             interRec = null;
 #endif
 #if UNITY_IOS
-            _setupWithListener("");
+            _setInterstitialListener("");
 #endif
         }
 
@@ -198,7 +212,7 @@ namespace Freestar
             rewardRec = null;
 #endif
 #if UNITY_IOS
-            _setupWithListener("");
+            _setRewardedListener("");
 #endif
         }
 
