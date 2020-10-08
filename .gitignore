@@ -13,3 +13,4 @@
 sonar-project.properties
 *.meta
 [tT]emp/
+./.idea
