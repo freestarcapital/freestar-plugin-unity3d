@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.freestar.android.ads.facebook:freestar-facebook-adapter:5.8.0.4' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:35
     implementation 'com.freestar.android.ads.google:freestar-google-adapter:17.2.0.5' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:26
     implementation 'com.freestar.android.ads.tapjoy:freestar-tapjoy-adapter:12.2.1' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:38
-    implementation 'com.freestar.android.ads.unityads:freestar-unity-adapter-no-jar:3.4.2.3' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:32
+    implementation 'com.freestar.android.ads.unityads:freestar-unity-adapter-no-jar:3.4.2.4' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:32
     implementation 'com.freestar.android.ads:freestar-pre-androidx:3.2.9' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:11
     implementation 'com.freestar.android.unity:unity-plugin:1.2.15' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:5
     implementation 'com.google.android.ads.consent:consent-library:1.0.7' // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:56

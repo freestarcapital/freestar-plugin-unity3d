@@ -28,7 +28,7 @@
     <androidPackage spec="com.freestar.android.ads.criteo:freestar-criteo-adapter:3.4.0.3">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter-no-jar:3.4.2.3">
+    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter-no-jar:3.4.2.4">
     </androidPackage>
 
     <androidPackage spec="com.freestar.android.ads.facebook:freestar-facebook-adapter:5.8.0.4">
