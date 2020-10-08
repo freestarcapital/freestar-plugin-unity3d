@@ -14,9 +14,11 @@ PKG_NAME = 'FreestarMediation.unitypackage'
 
 def build
   cmd = "(cd #{PROJ_DIR} && "
-  cmd += "#{UNITY_EX} -nographics -batchmode -quit -projectPath `pwd` "
+  cmd += "#{UNITY_EX} -nographics -batchmode "
+  cmd += "-importPackage ../libs/external-dependency-manager-1.2.159.unitypackage "
+  cmd += "-quit -projectPath `pwd` "
   cmd += "-exportPackage Assets/Plugins Assets/FreestarMediation "
-  cmd += "#{PKG_NAME}"
+  cmd += "Assets/ExternalDependencyManager #{PKG_NAME} "
   cmd += ")"
   puts cmd
   system(cmd)

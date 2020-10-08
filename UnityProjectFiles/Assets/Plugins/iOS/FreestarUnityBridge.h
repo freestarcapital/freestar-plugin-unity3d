@@ -21,7 +21,9 @@ extern "C" {
 #endif
 
 void _initWithAPIKey(char *apiKey);
-void _setupWithListener(char *listenerName);
+void _setInterstitialListener(char *listenerName);
+void _setRewardedListener(char *listenerName);
+
 void _loadInterstitialAd(char *placement);
 void _showInterstitialAd(char* placement);
 void _loadRewardedAd(char *placement);
