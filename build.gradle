@@ -24,10 +24,10 @@ ext {
     publishedGroupId = 'com.freestar.android.unity' // maven group id
     libraryName = "$bintrayRepo"  // same as repo name
     artifact = "$bintrayName" // maven artifact name; same as bintrayName
-    libraryDescription = 'Freestar Platform android sdk'   //CHANGE PER SDK TYPE
+    libraryDescription = 'Freestar Android SDK - Unity Plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/SDK_documentation_android.git'
-    libraryVersion = '1.2.15'  //CHANGE
+    libraryVersion = '1.2.17'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'vdopia developer'
     developerEmail = 'support@freestar.io'
@@ -38,12 +38,12 @@ ext {
 
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 3
         versionName "$libraryVersion"
         archivesBaseName = "$artifact"
@@ -74,13 +74,14 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.21.0'
     }
 }
 
 repositories {
     jcenter()
     google()
-    maven { url "https://dl.bintray.com/vdopiacorp/fsdk" }
+    maven { url "https://freestar.jfrog.io/artifactory/freestar-mediation-android-sdk" }
     flatDir {
         dirs 'libs'
     }
@@ -90,10 +91,11 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
     //compileOnly project(':Source')
-    compileOnly 'com.freestar.android.ads:freestar:3.2.8'
+    compileOnly 'com.freestar.android.ads:freestar:4.6.0'
     //compileOnly 'com.android.support:multidex:1.0.3'
     //compile 'com.vdopia.ads.lw:coresdk:2.5.2.0'
 }
 
-apply from: 'installv.gradle'
-apply from: 'bintrayv.gradle'
+//apply from: 'installv.gradle'
+//apply from: 'bintrayv.gradle'
+apply from: 'artifact.gradle'

@@ -72,6 +72,10 @@ class PopupBannerAd {
         }
     }
 
+    public String getWinningPartnerName() {
+        return bannerAd != null ? bannerAd.getWinningPartnerName() : "";
+    }
+
     public void showBannerAd(View bannerAdView) {
 
         if (activity == null || activity.get() == null || activity.get().isFinishing()

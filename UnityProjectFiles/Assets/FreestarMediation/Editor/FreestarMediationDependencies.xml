@@ -1,58 +1,112 @@
 <dependencies>
   <androidPackages>
 
-    <androidPackage spec="com.freestar.android.unity:unity-plugin:1.2.15">
+    <androidPackage spec="com.freestar.android.unity:unity-plugin:1.2.17">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads:freestar-pre-androidx:3.2.9">
+    <androidPackage spec="com.freestar.android.ads:freestar:4.6.0">
       <repositories>
-        <repository>https://dl.bintray.com/vdopiacorp/fsdk</repository>
+        <repository>https://freestar.jfrog.io/artifactory/freestar-mediation-android-sdk</repository>
       </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.admob:freestar-admob-adapter:17.2.0.4">
+    <androidPackage spec="com.freestar.android.ads.admob:freestar-admob-adapter:20.3.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.applovin:freestar-applovin-adapter:9.13.1.2">
+    <androidPackage spec="com.freestar.android.ads.applovin:freestar-applovin-adapter:10.3.1.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.amazon:freestar-amazon-adapter:5.9.0.3">
+    <androidPackage spec="com.freestar.android.ads.adcolony:freestar-adcolony-adapter:4.6.4.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.adcolony:freestar-adcolony-adapter:4.1.4.2">
+    <androidPackage spec="com.freestar.android.ads.google:freestar-google-adapter:20.3.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.google:freestar-google-adapter:17.2.0.5">
+    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter:3.7.1.2">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.criteo:freestar-criteo-adapter:3.4.0.3">
+    <androidPackage spec="com.freestar.android.ads.tapjoy:freestar-tapjoy-adapter:12.2.1.1">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter-no-jar:3.4.2.4">
+    <androidPackage spec="com.freestar.android.ads.vungle:freestar-vungle-adapter:6.10.2.1">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.facebook:freestar-facebook-adapter:5.8.0.4">
+    <androidPackage spec="com.freestar.android.ads.mopub:freestar-mopub-adapter:5.18.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.tapjoy:freestar-tapjoy-adapter:12.2.1">
+    <androidPackage spec="com.freestar.android.ads.tam:freestar-tam-adapter:8.4.3.2">
     </androidPackage>
 
-    <androidPackage spec="com.applovin:applovin-sdk:9.13.1">
+    <androidPackage spec="com.freestar.android.ads.nimbus:freestar-nimbus-adapter:1.10.4.0">
+    </androidPackage>
+
+    <androidPackage spec="com.freestar.android.ads.pangle:freestar-pangle-adapter:3.6.0.0">
+    </androidPackage>
+
+    <androidPackage spec="com.google.android.gms:play-services-ads:20.4.0">
+    </androidPackage>
+
+    <androidPackage spec="com.google.android.ads.consent:consent-library:1.0.8">
+    </androidPackage>
+
+    <androidPackage spec="androidx.constraintlayout:constraintlayout:2.0.4">
+    </androidPackage>
+
+    <androidPackage spec="com.applovin:applovin-sdk:10.3.1">
     </androidPackage>
 
     <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.4.2@aar">
+      <repositories>
+        <repository>https://sdk.tapjoy.com/</repository>
+      </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.facebook.android:audience-network-sdk:5.9.0">
+    <androidPackage spec="com.facebook.android:audience-network-sdk:6.5.1">
     </androidPackage>
 
-    <androidPackage spec="com.android.support:multidex:1.0.3">
+    <androidPackage spec="com.mopub.mediation:facebookaudiencenetwork:6.5.1.0">
     </androidPackage>
 
-    <androidPackage spec="com.google.android.gms:play-services-ads:17.2.1">
+    <androidPackage spec="com.vungle:publisher-sdk-android:6.10.2">
     </androidPackage>
 
-    <androidPackage spec="com.google.android.ads.consent:consent-library:1.0.7">
+    <androidPackage spec="com.mopub:mopub-sdk:5.18.0@aar">
+      <repositories>
+        <repository>https://s3.amazonaws.com/moat-sdk-builds</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.adsbynimbus.android:nimbus:1.10.4">
+      <repositories>
+        <repository>https://adsbynimbus-public.s3.amazonaws.com/android/sdks</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.adsbynimbus.android:extension-okhttp:1.10.4">
+    </androidPackage>
+
+    <androidPackage spec="com.adsbynimbus.openrtb:kotlin:0.7.4">
+    </androidPackage>
+
+    <androidPackage spec="com.adsbynimbus.android:extension-facebook:1.10.4">
+    </androidPackage>
+
+    <androidPackage spec="com.pangle.global:ads-sdk:3.6.0.4">
+      <repositories>
+        <repository>https://artifact.bytedance.com/repository/pangle</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.amazon.android:aps-sdk:8.4.3@aar">
+      <repositories>
+        <repository>https://s3.amazonaws.com/moat-sdk-builds</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.adcolony:sdk:4.6.4">
+    </androidPackage>
+
+    <androidPackage spec="com.criteo.publisher:criteo-publisher-sdk:4.4.0">
     </androidPackage>
 
   </androidPackages>

@@ -43,10 +43,10 @@ namespace Freestar
     		[System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setInterstitialListener(string listenerName);
 
-            [System.Runtime.InteropServices.DllImport("__Internal")]
+         [System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setRewardedListener(string listenerName);
 
-            [System.Runtime.InteropServices.DllImport("__Internal")]
+         [System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setBannerListener(string listenerName);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
@@ -69,9 +69,6 @@ namespace Freestar
     		extern static public void _setLocation(string dmaCode, string postal, string curPostal, string latitude, string longitude);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
-    		extern static public void _setPrivacySettings(bool gdprApplies, string gdprConsentString);
-
-    		[System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _setCustomSegmentProperty(string key, string value);
 
     		[System.Runtime.InteropServices.DllImport("__Internal")]
@@ -86,14 +83,14 @@ namespace Freestar
     		[System.Runtime.InteropServices.DllImport("__Internal")]
     		extern static public void _deleteAllCustomSegmentProperties();
     		
-            [System.Runtime.InteropServices.DllImport("__Internal")]
-            extern static public void _showBannerAd(string placement, int bannerAdSize, int bannerAdPosition);
+         [System.Runtime.InteropServices.DllImport("__Internal")]
+         extern static public void _showBannerAd(string placement, int bannerAdSize, int bannerAdPosition);
 
-            [System.Runtime.InteropServices.DllImport("__Internal")]
-            extern static public void _isBannerAdShowing(string placement, int bannerAdSize);
+         [System.Runtime.InteropServices.DllImport("__Internal")]
+         extern static public void _isBannerAdShowing(string placement, int bannerAdSize);
 
-            [System.Runtime.InteropServices.DllImport("__Internal")]
-            extern static public void _closeBannerAd(string placement, int bannerAdSize);
+         [System.Runtime.InteropServices.DllImport("__Internal")]
+         extern static public void _closeBannerAd(string placement, int bannerAdSize);
 
 #endif
 
@@ -132,7 +129,7 @@ namespace Freestar
         private static FreestarRewardedAdCallbackReceiver rewardRec;
         private static FreestarBannerAdCallbackReceiver bannerRec;
 
-        public static void initWithAPIKey(string apiKey)
+        public static void InitWithAPIKey(string apiKey)
         {
 #if UNITY_IOS
             _initWithAPIKey(apiKey);
@@ -148,7 +145,7 @@ namespace Freestar
         private static FreestarIOSRewardedMessagePasser rewardedMiddleman;
 
 
-        public static void setBannerAdListener(FreestarBannerAdCallbackReceiver listener)
+        public static void SetBannerAdListener(FreestarBannerAdCallbackReceiver listener)
         {
 #if UNITY_IOS
             GameObject obj = new GameObject();
@@ -165,7 +162,7 @@ namespace Freestar
 
         }
 
-        public static void setInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
+        public static void SetInterstitialAdListener(FreestarInterstitialAdCallbackReceiver listener)
         {
 #if UNITY_IOS
             GameObject obj = new GameObject();
@@ -181,7 +178,7 @@ namespace Freestar
 
         }
 
-        public static void setRewardedAdListener(FreestarRewardedAdCallbackReceiver listener)
+        public static void SetRewardedAdListener(FreestarRewardedAdCallbackReceiver listener)
         {
 #if UNITY_IOS
             GameObject obj = new GameObject();
@@ -196,7 +193,7 @@ namespace Freestar
 #endif
         }
 
-        public static void removeInterstitialAdListener()
+        public static void RemoveInterstitialAdListener()
         {
 #if UNITY_ANDROID
             interRec = null;
@@ -206,7 +203,7 @@ namespace Freestar
 #endif
         }
 
-        public static void removeRewardedAdListener()
+        public static void RemoveRewardedAdListener()
         {
 #if UNITY_ANDROID
             rewardRec = null;
@@ -216,7 +213,7 @@ namespace Freestar
 #endif
         }
 
-        public static void removeBannerAdListener()
+        public static void RemoveBannerAdListener()
         {
 #if UNITY_ANDROID
             bannerRec = null;
@@ -226,8 +223,9 @@ namespace Freestar
 #endif
         }
 
-        public static void loadInterstitialAd(string placement)
+        public static void LoadInterstitialAd(string placement)
         {
+            placement = placement + "";
 #if UNITY_IOS
     			_loadInterstitialAd(placement);
 #endif
@@ -237,7 +235,7 @@ namespace Freestar
 #endif
         }
 
-        public static void showInterstitialAd(string placement)
+        public static void ShowInterstitialAd(string placement)
         {
 #if UNITY_IOS
     		   _showInterstitialAd(placement);
@@ -251,8 +249,9 @@ namespace Freestar
 #endif
         }
 
-        public static void loadRewardedAd(string placement)
+        public static void LoadRewardedAd(string placement)
         {
+            placement = placement + "";
 #if UNITY_IOS
             _loadRewardedAd(placement);
 #endif
@@ -265,9 +264,9 @@ namespace Freestar
 #endif
         }
 
-        public static void showRewardedAd(string placement, int rewardAmount, string rewardName, string userId, string secretKey)
+        public static void ShowRewardedAd(string placement, int rewardAmount, string rewardName, string userId, string secretKey)
         {
-
+            placement = placement + "";
 #if UNITY_IOS
             _showRewardedAd(placement, rewardAmount, rewardName, userId, secretKey);
 #endif
@@ -304,7 +303,7 @@ namespace Freestar
 #endif
         }
 
-        public static void setDemograpics(int age, string birthDate, string gender, string maritalStatus,
+        public static void SetDemograpics(int age, string birthDate, string gender, string maritalStatus,
                              string ethnicity)
         {
 #if UNITY_IOS
@@ -324,7 +323,7 @@ namespace Freestar
 #endif
         }
 
-        public static void setLocation(string dmaCode, string postal, string curPostal, string latitude, string longitude)
+        public static void SetLocation(string dmaCode, string postal, string curPostal, string latitude, string longitude)
         {
 
 #if UNITY_IOS
@@ -345,28 +344,7 @@ namespace Freestar
 #endif
         }
 
-        public static void setPrivacySettings(bool gdprApplies, string gdprConsentString)
-        {
-#if UNITY_IOS
-            _setPrivacySettings(gdprApplies,gdprConsentString);
-#endif
-
-#if UNITY_ANDROID
-            if (AndroidPluginInstance() != null)
-            {
-                try
-                {
-                    FreestarPlugin.Call("SetPrivacySettings", gdprApplies, gdprConsentString);
-                }
-                catch (Exception e)
-                {
-                    Debug.Log("setPrivacySettings failed: " + e);
-                }
-            }
-#endif
-        }
-
-        public static void setCustomSegmentProperty(string key, string value)
+        public static void SetCustomSegmentProperty(string key, string value)
         {
 #if UNITY_IOS
             _setCustomSegmentProperty(key,value);
@@ -385,7 +363,7 @@ namespace Freestar
 
         }
 
-        public static string getCustomSegmentProperty(string key)
+        public static string GetCustomSegmentProperty(string key)
         {
 #if UNITY_IOS
             return _getCustomSegmentProperty(key);
@@ -404,7 +382,7 @@ namespace Freestar
             return null;
         }
 
-        public static Dictionary<string, string> getAllCustomSegmentProperties()
+        public static Dictionary<string, string> GetAllCustomSegmentProperties()
         {
 #if UNITY_IOS
 
@@ -433,7 +411,7 @@ namespace Freestar
             return null;
         }
 
-        public static void deleteCustomSegmentProperty(string key)
+        public static void DeleteCustomSegmentProperty(string key)
         {
 #if UNITY_IOS
             _deleteCustomSegmentProperty(key);
@@ -451,7 +429,7 @@ namespace Freestar
 #endif
         }
 
-        public static void deleteAllCustomSegmentProperties()
+        public static void DeleteAllCustomSegmentProperties()
         {
 #if UNITY_IOS
             _deleteAllCustomSegmentProperties();
@@ -469,12 +447,12 @@ namespace Freestar
 #endif
         }
 
-        public static void SetAdRequestTestMode(bool isTestMode, string testID)
+        public static void SetAdRequestTestMode(bool isTestMode)
         {
 #if UNITY_ANDROID
             if (AndroidPluginInstance() != null)
             {
-                FreestarPlugin.Call("SetTestModeEnabled", isTestMode, testID);
+                FreestarPlugin.Call("SetTestModeEnabled", isTestMode);
             }
 #endif
 
@@ -491,6 +469,7 @@ namespace Freestar
         {
             Debug.Log("FreestarUnityBridge Check Reward Ad...");
             bool isAvailable = false;
+            placement = placement + "";
 
 #if UNITY_ANDROID
             if (AndroidPluginInstance() != null)
@@ -508,6 +487,7 @@ namespace Freestar
 
         public static bool IsInterstitialAdAvailableToShow(string placement)
         {
+            placement = placement + "";
             Debug.Log("FreestarUnityBridge Check Interstitial Ad...");
             bool isAvailable = false;
 
@@ -524,6 +504,51 @@ namespace Freestar
 #endif
 
             return isAvailable;
+        }
+
+        //Invoke with true if you want the possibility of some banner ads to be fullscreen width.
+        //By default, this will be false.
+        public static void ShowAdaptiveBannerAdsWhenAvailable(bool showAdaptiveBannerAdsWhenAvailable)
+        {
+
+        #if UNITY_ANDROID
+                 if (AndroidPluginInstance() != null)
+                 {
+                     FreestarPlugin.Call("ShowAdaptiveBannerAdsWhenAvailable", showAdaptiveBannerAdsWhenAvailable);
+                 }
+                 Debug.Log("ShowAdaptiveBannerAdsWhenAvailable: " + showAdaptiveBannerAdsWhenAvailable);
+        #endif
+
+        #if UNITY_IOS
+                 Debug.Log("ShowAdaptiveBannerAdsWhenAvailable api not available on iOS yet");   //TODO
+        #endif
+
+        }
+
+       /**
+        *  Only use for automated testing of your game/app and you want to skip or limit
+        *  ads when testing.
+        *
+        *  Do NOT use for production builds!
+        *
+        *  AutomatedTestMode: 0 = bypass all ads
+        *                     1 = limited mediation
+        */
+        public static void SetAutomatedTestMode(int automatedTestMode)
+        {
+
+        #if UNITY_ANDROID
+                 if (AndroidPluginInstance() != null)
+                 {
+                     FreestarPlugin.Call("SetAutomatedTestMode", automatedTestMode);
+                 }
+                 Debug.Log("SetAutomatedTestMode: " + automatedTestMode);
+        #endif
+
+        #if UNITY_IOS
+                 Debug.Log("SetAutomatedTestMode api not available on iOS yet");   //TODO
+        #endif
+
         }
 
         //OPTIONAL! Set unique user id of your application, if you wish.
@@ -562,6 +587,7 @@ namespace Freestar
 
         public static string GetRewardedAdWinner(string placement) //TODO iOS
         {
+            placement = placement + "";
 #if UNITY_ANDROID
             try
             {
@@ -581,6 +607,7 @@ namespace Freestar
 
         public static string GetInterstitialAdWinner(string placement)
         {
+            placement = placement + "";
 #if UNITY_ANDROID
             try
             {
@@ -676,7 +703,8 @@ namespace Freestar
          * 
          * bannerAdSize:        Choose from:
          *                      FreestarConstants.BANNER_AD_SIZE_320x50 
-         *                      FreestarConstants.BANNER_AD_SIZE_300x250 
+         *                      FreestarConstants.BANNER_AD_SIZE_300x250
+         *                      FreestarConstants.BANNER_AD_SIZE_728x90
          *                   
          * bannerAdPosition:    Choose from:
          *                      FreestarConstants.BANNER_AD_POSITION_BOTTOM
@@ -685,6 +713,7 @@ namespace Freestar
          */
         public static void ShowBannerAd(string placement, int bannerAdSize, int bannerAdPosition)
         {
+            placement = placement + "";
 #if UNITY_ANDROID
             try
             {
@@ -711,6 +740,7 @@ namespace Freestar
          */
         public static bool IsBannerAdShowing(string placement, int bannerAdSize)
         {
+            placement = placement + "";
 #if UNITY_ANDROID
             try
             {
@@ -730,6 +760,27 @@ namespace Freestar
             return false;
         }
 
+        public static string GetBannerAdWinner(string placement, int bannerAdSize)
+        {
+            placement = placement + "";
+#if UNITY_ANDROID
+            try
+            {
+                return FreestarPlugin.Call<string>("GetBannerAdWinner", placement, bannerAdSize);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("GetBannerAdWinner failed: " + e);
+                return "";
+            }
+#endif
+
+#if UNITY_IOS
+            Debug.Log("GetBannerAdWinner api not available on iOS yet");
+#endif
+            return "";
+        }
+
         /**
          * Placement:           ad unit placement (can pass in null if you don't have one)
          * 
@@ -740,6 +791,7 @@ namespace Freestar
          */
         public static void CloseBannerAd(string placement, int bannerAdSize)
         {
+            placement = placement + "";
 #if UNITY_ANDROID
             try
             {

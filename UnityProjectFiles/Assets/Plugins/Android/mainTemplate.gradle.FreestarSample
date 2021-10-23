@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:4.0.2'
 **BUILD_SCRIPT_DEPS**}
 }
 
@@ -18,8 +18,16 @@ allprojects {
         flatDir {
             dirs 'libs'
         }
+
+       maven { url 'https://jitpack.io' }
+       maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+       maven { url "https://sdk.tapjoy.com/" }
+       maven { url "https://hyprmx.jfrog.io/artifactory/hyprmx" }
+       maven { url "https://artifact.bytedance.com/repository/pangle"}
+       maven { url "https://adsbynimbus-public.s3.amazonaws.com/android/sdks"}
+
         maven {
-            url "https://dl.bintray.com/vdopiacorp/fsdk" // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:11
+            url "https://freestar.jfrog.io/artifactory/freestar-mediation-android-sdk" // Assets/FreestarMediation/Editor/FreestarMediationDependencies.xml:11
         }
     }
 }
@@ -79,7 +87,6 @@ android {
         }
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
-        multiDexEnabled true
     }
 
     lintOptions {

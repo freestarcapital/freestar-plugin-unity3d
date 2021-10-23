@@ -1,13 +1,13 @@
 
 
 
-"C:\Program Files\Unity.2019.2.2f1\Editor\Unity.exe" -gvh_disable       -batchmode       -importPackage c:\Users\kevin\Downloads\play-services-resolver-1.2.135.0.unitypackage       -projectPath c:\Dev\vdopia\samples\unity_samples\\ChocolateUnityPackageProject       -exportPackage Assets ChocolateMediationPlugin-1.0.6.unitypackage       -quit
+"K:\Program Files\2021.1.25f1\Editor\Unity.exe" -gvh_disable       -batchmode       -importPackage k:\Users\kevin\Downloads\external-dependency-manager-1.2.167.unitypackage      -projectPath c:\Dev\vdopia\samples\unity_samples\\ChocolateUnityPackageProject       -exportPackage Assets FreestarMediationPlugin-1.1.7.unitypackage       -quit
 
 First remove the old PlayServicesResolver folder: C:\Dev\vdopia\samples\unity_samples\ChocolateUnityPackageProject\Assets\PlayResolver
 
 The Unity package will be dropped in C:\Dev\vdopia\samples\unity_samples\ChocolateUnityPackageProject\
 
-C:\Dev\vdopia\samples\unity_samples\\ChocolateUnityPackageProject  - you build the .unitypackage from this project.  this is NOT the
+C:\Dev\vdopia\samples\unity_samples\ChocolateUnityPackageProject  - you build the .unitypackage from this project.  this is NOT the
 project where you want to build the unity sample app.
 
 choose any of the other projects to make a sample app from.
