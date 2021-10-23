@@ -23,9 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class FreestarPlugin {
 
@@ -44,6 +42,7 @@ public class FreestarPlugin {
     private static long lastRequestTime;
     private static boolean smallBannerInProgress;
     private static boolean mrecBannerInProgress;
+    private static boolean leaderboardBannerInProgress;
 
     private static FreestarPlugin freestarPluginInstance;
 
@@ -167,17 +166,11 @@ public class FreestarPlugin {
         }
     }
 
-    public void SetTestModeEnabled(boolean isEnabled, String hashID) {
+    public void SetTestModeEnabled(boolean isEnabled) {
         ChocolateLogger.i(TAG, "Unity Test Params Set: " + isEnabled);
         FreeStarAds.enableLogging(isEnabled);
         FreeStarAds.enableTestAds(isEnabled);
         getAdRequest().setTestModeEnabled(isEnabled);
-
-        if (!TextUtils.isEmpty(hashID)) {
-            Set<String> testID = new HashSet<>();
-            testID.add(hashID);
-            adRequest.setTestDevices(testID);
-        }
     }
 
     public void Init(final String apiKey) {
@@ -290,6 +283,29 @@ public class FreestarPlugin {
         });
     }
 
+    public void ShowAdaptiveBannerAdsWhenAvailable(boolean showWhenAvailable) {
+        FreeStarAds.showAdaptiveBannerAdsWhenAvailable(showWhenAvailable);
+    }
+
+    public boolean IsShowAdaptiveBannerAdsWhenAvailable() {
+        return FreeStarAds.isShowAdaptiveBannerAdsWhenAvailable();
+    }
+
+    /**
+     *  Only use for automated testing of your game/app and you want to skip or limit
+     *  ads when testing.
+     *
+     *  Do NOT use for production builds!
+     *
+     *  AutomatedTestMode: 0 = bypass all ads
+     *                     1 = limited mediation
+     */
+    public static void SetAutomatedTestMode(int automatedTestMode) {
+        FreeStarAds.setAutomatedTestMode(automatedTestMode == 0 ?
+                FreeStarAds.AutomatedTestMode.BYPASS_ALL_ADS :
+                FreeStarAds.AutomatedTestMode.LIMITED_MEDIATION);
+    }
+
     public boolean IsRewardedAdAvailableToShow(String placement) {
         try {
             return getRewardedAd(placement).isReady();
@@ -372,6 +388,9 @@ public class FreestarPlugin {
         if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
             mrecBannerInProgress = false;
         }
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_728x90) {
+            leaderboardBannerInProgress = false;
+        }
     }
 
     private void markFullscreenRequest() {
@@ -388,55 +407,11 @@ public class FreestarPlugin {
         return !isRequestInProgress;
     }
 
-    public void SetGDPR(final String isSubjectToGDPR, final String iabConsentString) {
-        if (isQuitting()) return;
-        try {
-            FreeStarAds.setGDPR(getActivity(), isSubjectToGDPR != null && isSubjectToGDPR.equals("1"), iabConsentString);
-        } catch (Exception e) {
-            ChocolateLogger.e(TAG, "SetGDPR() failed", e);
-        }
-    }
-
-    public boolean IsSubjectToGDPR() {
-        try {
-            return FreeStarAds.isSubjectToGDPR(getActivity());
-        } catch (Exception e) {
-            ChocolateLogger.e(TAG, "IsSubjectToGDPR failed", e);
-        }
-        return false;
-    }
-
-    public boolean IsGDPRConsentAvailable() {
-        try {
-            return FreeStarAds.getGDPRConsentString(getActivity()) != null;
-        } catch (Exception e) {
-            ChocolateLogger.e(TAG, "IsGDPRConsentAvailable failed", e);
-        }
-        return false;
-    }
-
-    public String GetGDPRConsentString() {
-        try {
-            return FreeStarAds.getGDPRConsentString(getActivity());
-        } catch (Exception e) {
-            ChocolateLogger.e(TAG, "GetGDPRConsentString failed", e);
-        }
-        return null;
-    }
-
     public void SetUserId(String userId) {
         try {
             FreeStarAds.setUserId(getActivity(), userId);
         } catch (Exception e) {
             ChocolateLogger.e(TAG, "SetUserId failed", e);
-        }
-    }
-
-    public void SetPrivacySettings(boolean gdprApplies, String gdprConsentString) {
-        try {
-            FreeStarAds.setGDPR(getActivity(), gdprApplies, gdprConsentString);
-        } catch (Throwable t) {
-            ChocolateLogger.e(TAG, "SetPrivacySettings failed", t);
         }
     }
 
@@ -507,7 +482,7 @@ public class FreestarPlugin {
 
     public void ShowBannerAd(final String placement, final int bannerAdSize, final int bannerAdPosition) {
         if (SHOW_PARTNER_CHOOSER) {
-            MediationPartners.choosePartners(getActivity(), getAdRequest(), MediationPartners.ADTYPE_INVIEW, new DialogInterface.OnClickListener() {
+            MediationPartners.choosePartners(getActivity(), getAdRequest(), MediationPartners.ADTYPE_BANNER, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     _ShowBannerAd(placement, bannerAdSize, bannerAdPosition);
@@ -535,6 +510,10 @@ public class FreestarPlugin {
             return; //already in progress
         }
 
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_728x90 && leaderboardBannerInProgress) {
+            return; //already in progress
+        }
+
         if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
             mrecBannerInProgress = true;
         }
@@ -543,13 +522,23 @@ public class FreestarPlugin {
             smallBannerInProgress = true;
         }
 
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_728x90) {
+            leaderboardBannerInProgress = true;
+        }
+
         if (IsBannerAdShowing(placement, bannerAdSize)) {
             CloseBannerAd(placement, bannerAdSize);
         }
 
         final PopupBannerAd bannerAd = getBannerAd(placement, bannerAdSize);
-        AdSize adSize = bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250 ? AdSize.MEDIUM_RECTANGLE_300_250
-                : AdSize.BANNER_320_50;
+        AdSize adSize = AdSize.BANNER_320_50;
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
+            adSize = AdSize.MEDIUM_RECTANGLE_300_250;
+        } else if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50) {
+            adSize = AdSize.BANNER_320_50;
+        } else if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_728x90) {
+            adSize = AdSize.LEADERBOARD_728_90;
+        }
         bannerAd.loadBannerAd(getAdRequest(), adSize, placement, bannerAdPosition,
                 new FreestarAdEventHandler(
                         FreestarConstants.BANNER_AD_TYPE,
@@ -562,6 +551,13 @@ public class FreestarPlugin {
                                 super.onBannerAdLoaded(bannerAdView, placement);
                             }
                         });
+    }
+
+    public String GetBannerAdWinner(String placement, int adSize) {
+        if (bannerAdMap.containsKey(placement + adSize)) {
+            return bannerAdMap.get(placement + adSize).getWinningPartnerName();
+        }
+        return "";
     }
 
     public boolean IsBannerAdShowing(String placement, int adSize) {

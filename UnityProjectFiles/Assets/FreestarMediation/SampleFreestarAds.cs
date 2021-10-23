@@ -19,6 +19,11 @@ namespace Freestar
 
         public static SampleFreestarAds instance;
 
+        public void quit()
+        {
+            Application.Quit();
+        }
+
         private void Awake()
         {
             instance = this;
@@ -28,20 +33,20 @@ namespace Freestar
         {
             log("Start");
 
-            FreestarUnityBridge.SetAdRequestTestMode(true, "xxxxxxxx");  //OPTIONAL TEST MODE
+            FreestarUnityBridge.SetAdRequestTestMode(true);  //OPTIONAL TEST MODE
             FreestarUnityBridge.ShowPartnerChooser(true); //ONLY FOR TESTING PURPOSES; TURN OFF FOR PRODUCTION!
 
 #if UNITY_ANDROID
-            FreestarUnityBridge.initWithAPIKey("XqjhRR");  //Android TEST KEY  Replace with yours in production.
+            FreestarUnityBridge.InitWithAPIKey("XqjhRR");  //Android TEST KEY  Replace with yours in production.
 #endif
 
 #if UNITY_IOS
-           FreestarUnityBridge.initWithAPIKey("X4mdFv");  //iOS TEST KEY  Replace with yours in production.
+           FreestarUnityBridge.InitWithAPIKey("X4mdFv");  //iOS TEST KEY  Replace with yours in production.
 #endif
 
-            FreestarUnityBridge.setBannerAdListener(this);
-            FreestarUnityBridge.setInterstitialAdListener(this);
-            FreestarUnityBridge.setRewardedAdListener(this);
+            FreestarUnityBridge.SetBannerAdListener(this);
+            FreestarUnityBridge.SetInterstitialAdListener(this);
+            FreestarUnityBridge.SetRewardedAdListener(this);
         }
 
         void OnApplicationFocus(bool hasFocus)
@@ -59,12 +64,14 @@ namespace Freestar
         public void onInterstitialAdLoaded(string placement)
         {
             //interstitial ad is ready!  You can display now, or you can wait until a later time.
-            updateStatusUI("Interstitial Ad Winner: " + FreestarUnityBridge.GetInterstitialAdWinner(placement) + " Placement: [" + placement + "]");
+            //updateStatusUI("Interstitial Ad Winner: " + FreestarUnityBridge.GetInterstitialAdWinner(placement) + " Placement: [" + placement + "]");
+            string str = "Interstitial: " + FreestarUnityBridge.GetInterstitialAdWinner(placement);
+            updateStatusUI(str);
             showInterstitialAd();
         }
         public void onInterstitialAdFailed(string placement)
         {
-            updateStatusUI("Interstitial Ad: no-fillunRegisterAdListener");
+            updateStatusUI("Interstitial: No-Fill");
             //no need to pre-fetch the next ad here.  this will be done internally and automatically.
         }
         public void onInterstitialAdShown(string placement)
@@ -82,14 +89,15 @@ namespace Freestar
 
         public void onRewardedAdLoaded(string placement)
         {
-            updateStatusUI("Rewarded Ad Winner: " + FreestarUnityBridge.GetRewardedAdWinner(placement) + " Placement: [" + placement + "]");
+            string str = "Rewarded: " + FreestarUnityBridge.GetRewardedAdWinner(placement);
+            updateStatusUI(str);
 
             //reward ad is ready!  You can display now, or you can wait until a later time.
             showRewardedAd();
         }
         public void onRewardedAdFailed(string placement)
         {
-            updateStatusUI("Rewarded Ad: no-fill");  //no-fill or no internet
+            updateStatusUI("Rewarded: No-Fill");  //no-fill or no internet
                                                      //no need to pre-fetch the next ad here.  this will be done internally and automatically.
         }
         public void onRewardedAdShown(string placement)
@@ -108,6 +116,14 @@ namespace Freestar
 
         public void onBannerAdShowing(string placement, int adSize)
         {
+            if (adSize == FreestarConstants.BANNER_AD_SIZE_300x250)
+            {
+                updateStatusUI("MREC Ad: " + FreestarUnityBridge.GetBannerAdWinner(placement, adSize));
+            } else
+            {
+                updateStatusUI("Banner Ad: " + FreestarUnityBridge.GetBannerAdWinner(placement, adSize));
+            }
+
             log("onBannerAdShowing placement=[" + placement + "] adSize: "+ adSize);
         }
 
@@ -118,6 +134,7 @@ namespace Freestar
 
         public void onBannerAdFailed(string placement, int adSize)
         {
+            updateStatusUI("No-Fill");
             log("onBannerAdFailed placement=[" + placement + "] adSize: " + adSize);
         }
 
@@ -126,19 +143,19 @@ namespace Freestar
 
         public void loadInterstitialAd()     //called when Interstitial button clicked
         {
-            log("Load Interstitial Ad...");
-            FreestarUnityBridge.loadInterstitialAd("");
+            updateStatusUI("Loading interstitial...");
+            FreestarUnityBridge.LoadInterstitialAd("");
         }
 
         private void showInterstitialAd()
         {
             log("Show Interstitial Ad...");
-            FreestarUnityBridge.showInterstitialAd("");
+            FreestarUnityBridge.ShowInterstitialAd("");
         }
 
         public void loadSmallBannerAd()
         {
-            log("Load Small Banner Ad...");
+            updateStatusUI("Loading Banner ad...");
             if (FreestarUnityBridge.IsBannerAdShowing(null, FreestarConstants.BANNER_AD_SIZE_300x250))
                 FreestarUnityBridge.CloseBannerAd(null, FreestarConstants.BANNER_AD_SIZE_300x250);
 
@@ -147,7 +164,7 @@ namespace Freestar
 
         public void loadMRECBannerAd()
         {
-            log("Load MREC Banner Ad...");
+            updateStatusUI("Loading MREC ad...");
             if (FreestarUnityBridge.IsBannerAdShowing(null, FreestarConstants.BANNER_AD_SIZE_320x50))
                 FreestarUnityBridge.CloseBannerAd(null, FreestarConstants.BANNER_AD_SIZE_320x50);
 
@@ -160,14 +177,14 @@ namespace Freestar
          */
         public void loadRewardedAd()
         {
-            log("Load Reward Ad...");
-            FreestarUnityBridge.loadRewardedAd("");
+            updateStatusUI("Loading rewarded...");
+            FreestarUnityBridge.LoadRewardedAd("");
         }
 
         private void showRewardedAd()           //called when btnShowReward Clicked
         {
             log("Show Reward Ad...");
-            FreestarUnityBridge.showRewardedAd("", 30, "coins", "", "qwer1234");
+            FreestarUnityBridge.ShowRewardedAd("", 30, "coins", "", "qwer1234");
         }
 
         private void updateStatusUI(string newStatus)
@@ -189,9 +206,9 @@ namespace Freestar
         //Be sure to unRegister before loading a new scene.
         private void unRegisterAdListener()
         {
-            FreestarUnityBridge.removeBannerAdListener();
-            FreestarUnityBridge.removeRewardedAdListener();
-            FreestarUnityBridge.removeInterstitialAdListener();
+            FreestarUnityBridge.RemoveBannerAdListener();
+            FreestarUnityBridge.RemoveRewardedAdListener();
+            FreestarUnityBridge.RemoveInterstitialAdListener();
         }
 
         private void OnDestroy()

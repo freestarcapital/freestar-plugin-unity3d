@@ -17,7 +17,8 @@ namespace Freestar
        //AD SIZES
        public const int BANNER_AD_SIZE_320x50 = 0;
        public const int BANNER_AD_SIZE_300x250 = 1;
-       public const int FULLSCREEN_AD_SIZE = 2;
+       public const int BANNER_AD_SIZE_728x90 = 2;
+       public const int FULLSCREEN_AD_SIZE = 3;
 
        //AD POSITION
        public const int BANNER_AD_POSITION_BOTTOM = 0;
