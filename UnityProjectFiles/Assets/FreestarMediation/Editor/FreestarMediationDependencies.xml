@@ -76,10 +76,7 @@
     <androidPackage spec="com.vungle:publisher-sdk-android:6.10.2">
     </androidPackage>
 
-    <androidPackage spec="com.mopub:mopub-sdk:5.18.0@aar">
-      <repositories>
-        <repository>mavenCentral()</repository>
-      </repositories>
+    <androidPackage spec="com.mopub:mopub-sdk:5.18.0">
     </androidPackage>
 
     <androidPackage spec="com.adsbynimbus.android:nimbus:1.10.4">
