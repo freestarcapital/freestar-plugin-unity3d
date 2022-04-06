@@ -121,16 +121,21 @@
   </androidPackages>
 
   <iosPods>
-    <iosPod name="FreestarAds" version="~> 3.4"></iosPod>
-    <iosPod name="FreestarAds-AdColony" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-AppLovin" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Tapjoy" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Unity" version="~> 4.0"></iosPod>
-    <iosPod name="FreestarAds-Googleadmob" version="~> 2.0"></iosPod>
-    <iosPod name="FreestarAds-Vungle" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Amazon" version="~> 2.0"></iosPod>
-    <iosPod name="FreestarAds-GAM" version="~> 1.0"></iosPod>
-    <iosPod name="FreestarAds-Criteo" version="~> 1.0"></iosPod>
-    <iosPod name="FreestarAds-Facebook" version="~> 3.1"></iosPod>
+    <iosPod name="FreestarAds" version="~> 5.0"></iosPod>
+    <iosPod name="FreestarAds-AdColony" version="~> 4.7"></iosPod>
+    <iosPod name="FreestarAds-AppLovin" version="~> 11.0"></iosPod>
+    <iosPod name="FreestarAds-AppLovinMax" version="~> 11.0"></iosPod>
+    <iosPod name="FreestarAds-Tapjoy" version="~> 12.8"></iosPod>
+    <iosPod name="FreestarAds-Googleadmob" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-Googleadmob/Facebook" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-GAM" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-GAM/Facebook" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-TAM" version="~> 4.3"></iosPod>
+    <iosPod name="FreestarAds-Criteo" version="~> 4.3"></iosPod>
+    <iosPod name="FreestarAds-Unity" version="~> 3.7"></iosPod>
+    <iosPod name="FreestarAds-Vungle" version="~> 6.10"></iosPod>
+    <iosPod name="FreestarAds-Pangle" version="~> 3.7"></iosPod>
+    <!-- <iosPod name="FreestarAds-Nimbus" version="~> 1.10"></iosPod> -->
+    <!-- <iosPod name="FreestarAds-Google" version="~> 3.13"></iosPod> -->
   </iosPods>
 </dependencies>
