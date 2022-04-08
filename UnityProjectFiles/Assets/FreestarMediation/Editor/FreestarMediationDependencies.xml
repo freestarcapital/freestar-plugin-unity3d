@@ -132,7 +132,7 @@
     <iosPod name="FreestarAds-GAM/Facebook" version="~> 9.2"></iosPod>
     <iosPod name="FreestarAds-TAM" version="~> 4.3"></iosPod>
     <iosPod name="FreestarAds-Criteo" version="~> 4.3"></iosPod>
-    <iosPod name="FreestarAds-Unity" version="~> 3.7"></iosPod>
+    <iosPod name="FreestarAds-Unity" version="~> 4.1"></iosPod>
     <iosPod name="FreestarAds-Vungle" version="~> 6.10"></iosPod>
     <iosPod name="FreestarAds-Pangle" version="~> 3.7"></iosPod>
     <!-- <iosPod name="FreestarAds-Nimbus" version="~> 1.10"></iosPod> -->
