@@ -140,6 +140,27 @@ namespace Freestar
 #endif
         }
 
+        /**
+         * Only applies to Android/Google Play Store.  Call this method if Google has 
+         * officially determined that your game must comply with the Google Families
+         * policy.
+         * 
+         * mode: 0 = none   - Google Families policy does not apply to this game (default).
+         *       1 = app    - This game is part of the Google Families program and is directed towards children.
+         *       2 = mixed  - This game is part of the Google Families program and is directed towards children and families.
+         *    
+         * onlyNonPersonalizedAds: true - Only show non-personalized ads if the mode is 'mixed'.
+         *                                If mode is not 'mixed', then this parameter will be ignored.
+         *                         false - Will show personalized ads if the mode is 'mixed'.
+         *                                If mode is not 'mixed', then this parameter will be ignored.
+         */
+        public static void SetGoogleFamiliesMode(int mode, bool onlyNonPersonalizedAds)
+        {
+#if UNITY_ANDROID
+            FreestarPlugin.Call("SetGoogleFamiliesMode", mode, onlyNonPersonalizedAds);
+#endif
+        }
+
         private static FreestarIOSBannerMessagePasser bannerMiddleman;
         private static FreestarIOSInterstitialMessagePasser interstitialMiddleman;
         private static FreestarIOSRewardedMessagePasser rewardedMiddleman;

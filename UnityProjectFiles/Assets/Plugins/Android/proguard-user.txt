@@ -136,3 +136,7 @@
 # nimbus
 -keep class com.adsbynimbus.** { *; }
 -keep interface com.adsbynimbus.** { *; }
+
+# verizon
+-keep class com.verizon.** { *; }
+-keep interface com.verizon.** { *; }

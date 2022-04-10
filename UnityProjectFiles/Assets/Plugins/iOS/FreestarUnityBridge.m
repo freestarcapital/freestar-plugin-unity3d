@@ -193,17 +193,6 @@ void _setLocation(char* dmaCode, char* postal, char* curPostal, char* latitude, 
     
 }
 
-void _setPrivacySettings(_Bool gdprApplies, char* gdprConsentString) {
-    NSString *consentString = nil;
-    if(gdprConsentString){
-        consentString = convertString(gdprConsentString );
-    }
-    
-    [[Freestar privacySettings]
-     subjectToGDPR:gdprApplies
-     withConsent:consentString];
-}
-
 #pragma mark - custom segment properties
 
 void _setCustomSegmentProperty(char* key, char* value) {

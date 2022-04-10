@@ -187,6 +187,25 @@ public class FreestarPlugin {
         });
     }
 
+    /**
+     *
+     * @param mode 0 - none
+     *             1 - app
+     *             2 - mixed
+     * @param onlyNonPersonalizedAds - only takes effect for 'mixed' mode
+     */
+    public void SetGoogleFamiliesMode(int mode, boolean onlyNonPersonalizedAds) {
+        ChocolateLogger.i(TAG, "SetGoogleFamiliesMode. mode: " + mode
+                + " onlyNonPersonalizedAds: " + onlyNonPersonalizedAds);
+        FreeStarAds.GoogleFamilyPolicyMode theMode = FreeStarAds.GoogleFamilyPolicyMode.none;
+        if (mode == 1) {
+            theMode = FreeStarAds.GoogleFamilyPolicyMode.app;
+        } else if (mode == 2) {
+            theMode = FreeStarAds.GoogleFamilyPolicyMode.mixed;
+        }
+        FreeStarAds.setGoogleFamilyPolicyMode(theMode, onlyNonPersonalizedAds);
+    }
+
     private boolean isQuitting() {
         return getActivity() == null || getActivity().isFinishing();
     }

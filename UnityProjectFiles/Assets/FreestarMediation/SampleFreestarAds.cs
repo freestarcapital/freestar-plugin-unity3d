@@ -37,6 +37,7 @@ namespace Freestar
             FreestarUnityBridge.ShowPartnerChooser(true); //ONLY FOR TESTING PURPOSES; TURN OFF FOR PRODUCTION!
 
 #if UNITY_ANDROID
+            FreestarUnityBridge.SetGoogleFamiliesMode(0, false); //Google Families policy does not apply to this game.
             FreestarUnityBridge.InitWithAPIKey("XqjhRR");  //Android TEST KEY  Replace with yours in production.
 #endif
 

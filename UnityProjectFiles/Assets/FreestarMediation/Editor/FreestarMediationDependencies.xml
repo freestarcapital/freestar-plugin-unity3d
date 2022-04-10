@@ -1,22 +1,25 @@
 <dependencies>
   <androidPackages>
 
-    <androidPackage spec="com.freestar.android.unity:unity-plugin:1.2.17">
+    <androidPackage spec="com.freestar.android.unity:unity-plugin:1.3.1">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads:freestar:4.6.0">
+    <androidPackage spec="com.freestar.android.ads:freestar:4.6.4">
       <repositories>
         <repository>https://freestar.jfrog.io/artifactory/freestar-mediation-android-sdk</repository>
       </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.admob:freestar-admob-adapter:20.3.0.0">
+    <androidPackage spec="com.freestar.android.ads.admob:freestar-admob-adapter:20.6.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.applovin:freestar-applovin-adapter:10.3.1.0">
+    <androidPackage spec="com.freestar.android.ads.applovin:freestar-applovin-adapter:11.2.2.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.adcolony:freestar-adcolony-adapter:4.6.4.0">
+    <androidPackage spec="com.freestar.android.ads.applovinmax:freestar-applovinmax-adapter:11.2.2.0">
+    </androidPackage>
+
+    <androidPackage spec="com.freestar.android.ads.adcolony:freestar-adcolony-adapter:4.6.5.0">
     </androidPackage>
 
     <androidPackage spec="com.freestar.android.ads.criteo:freestar-criteo-adapter:4.2.1.2">
@@ -25,31 +28,28 @@
     <androidPackage spec="com.freestar.android.ads.hyprmx:freestar-hyprmx-adapter:6.0.1.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.google:freestar-google-adapter:20.3.0.0">
+    <androidPackage spec="com.freestar.android.ads.google:freestar-google-adapter:20.6.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter:3.7.1.2">
+    <androidPackage spec="com.freestar.android.ads.unityads:freestar-unity-adapter:4.1.0.0">
     </androidPackage>
 
     <androidPackage spec="com.freestar.android.ads.tapjoy:freestar-tapjoy-adapter:12.2.1.1">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.vungle:freestar-vungle-adapter:6.10.2.2">
+    <androidPackage spec="com.freestar.android.ads.vungle:freestar-vungle-adapter:6.10.4.0">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.mopub:freestar-mopub-adapter:5.18.0.0">
+    <androidPackage spec="com.freestar.android.ads.tam:freestar-tam-adapter:8.4.3.3">
     </androidPackage>
 
-    <androidPackage spec="com.freestar.android.ads.tam:freestar-tam-adapter:8.4.3.2">
-    </androidPackage>
-
-    <androidPackage spec="com.freestar.android.ads.nimbus:freestar-nimbus-adapter:1.10.4.0">
+    <androidPackage spec="com.freestar.android.ads.nimbus:freestar-nimbus-adapter:1.10.4.1">
     </androidPackage>
 
     <androidPackage spec="com.freestar.android.ads.pangle:freestar-pangle-adapter:3.6.0.0">
     </androidPackage>
 
-    <androidPackage spec="com.google.android.gms:play-services-ads:20.4.0">
+    <androidPackage spec="com.google.android.gms:play-services-ads:20.6.0">
     </androidPackage>
 
     <androidPackage spec="com.google.android.ads.consent:consent-library:1.0.8">
@@ -58,7 +58,10 @@
     <androidPackage spec="androidx.constraintlayout:constraintlayout:2.0.4">
     </androidPackage>
 
-    <androidPackage spec="com.applovin:applovin-sdk:10.3.1">
+    <androidPackage spec="androidx.browser:browser:1.4.0">
+    </androidPackage>
+
+    <androidPackage spec="com.applovin:applovin-sdk:11.3.1">
     </androidPackage>
 
     <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.4.2@aar">
@@ -67,16 +70,10 @@
       </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.facebook.android:audience-network-sdk:6.5.1">
+    <androidPackage spec="com.facebook.android:audience-network-sdk:6.8.0">
     </androidPackage>
 
-    <androidPackage spec="com.mopub.mediation:facebookaudiencenetwork:6.5.1.0">
-    </androidPackage>
-
-    <androidPackage spec="com.vungle:publisher-sdk-android:6.10.2">
-    </androidPackage>
-
-    <androidPackage spec="com.mopub:mopub-sdk:5.18.0">
+    <androidPackage spec="com.vungle:publisher-sdk-android:6.10.5">
     </androidPackage>
 
     <androidPackage spec="com.adsbynimbus.android:nimbus:1.10.4">
@@ -100,13 +97,19 @@
       </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.amazon.android:aps-sdk:8.4.3@aar">
+    <androidPackage spec="com.verizon.ads:android-vas-standard-edition:1.14.0">
+      <repositories>
+        <repository>https://artifactory.verizonmedia.com/artifactory/maven</repository>
+      </repositories>
+    </androidPackage>
+
+    <androidPackage spec="com.amazon.android:aps-sdk:9.2.1@aar">
       <repositories>
         <repository>https://s3.amazonaws.com/moat-sdk-builds</repository>
       </repositories>
     </androidPackage>
 
-    <androidPackage spec="com.adcolony:sdk:4.6.4">
+    <androidPackage spec="com.adcolony:sdk:4.6.5">
     </androidPackage>
 
     <androidPackage spec="com.criteo.publisher:criteo-publisher-sdk:4.4.0">
@@ -118,19 +121,34 @@
       </repositories>
     </androidPackage>
 
+    <androidPackage spec="com.google.ads.mediation:applovin:11.3.1.0">
+    </androidPackage>
+
+    <androidPackage spec="com.google.ads.mediation:adcolony:4.7.0.0">
+    </androidPackage>
+
+    <androidPackage spec="com.google.ads.mediation:tapjoy:12.9.1.0">
+    </androidPackage>
+
+    <androidPackage spec="com.google.ads.mediation:facebook:6.8.0.0">
+    </androidPackage>
+
   </androidPackages>
 
   <iosPods>
-    <iosPod name="FreestarAds" version="~> 3.4"></iosPod>
-    <iosPod name="FreestarAds-AdColony" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-AppLovin" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Tapjoy" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Unity" version="~> 4.0"></iosPod>
-    <iosPod name="FreestarAds-Googleadmob" version="~> 2.0"></iosPod>
-    <iosPod name="FreestarAds-Vungle" version="~> 3.0"></iosPod>
-    <iosPod name="FreestarAds-Amazon" version="~> 2.0"></iosPod>
-    <iosPod name="FreestarAds-GAM" version="~> 1.0"></iosPod>
-    <iosPod name="FreestarAds-Criteo" version="~> 1.0"></iosPod>
-    <iosPod name="FreestarAds-Facebook" version="~> 3.1"></iosPod>
+    <iosPod name="FreestarAds" version="~> 5.0"></iosPod>
+    <iosPod name="FreestarAds-AdColony" version="~> 4.7"></iosPod>
+    <iosPod name="FreestarAds-AppLovin" version="~> 11.0"></iosPod>
+    <iosPod name="FreestarAds-AppLovinMax" version="~> 11.0"></iosPod>
+    <iosPod name="FreestarAds-Tapjoy" version="~> 12.8"></iosPod>
+    <iosPod name="FreestarAds-Googleadmob" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-Googleadmob/Facebook" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-GAM" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-GAM/Facebook" version="~> 9.2"></iosPod>
+    <iosPod name="FreestarAds-TAM" version="~> 4.3"></iosPod>
+    <iosPod name="FreestarAds-Criteo" version="~> 4.3"></iosPod>
+    <iosPod name="FreestarAds-Unity" version="~> 4.1"></iosPod>
+    <iosPod name="FreestarAds-Vungle" version="~> 6.10"></iosPod>
+    <iosPod name="FreestarAds-Pangle" version="~> 3.7"></iosPod>
   </iosPods>
 </dependencies>

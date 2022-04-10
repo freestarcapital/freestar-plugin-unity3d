@@ -34,8 +34,6 @@ void _setDemograpics(int age, char* birthDate, char* gender, char* maritalStatus
                      char* ethnicity);
 void _setLocation(char* dmaCode, char* postal, char* curPostal, char* latitude, char* longitude);
 
-void _setPrivacySettings(_Bool gdprApplies, char* gdprConsentString);
-
 void _setCustomSegmentProperty(char* key, char* value);
 const char* _Nullable _getCustomSegmentProperty(char* key);
 const char* _Nullable _getAllCustomSegmentProperties(void);

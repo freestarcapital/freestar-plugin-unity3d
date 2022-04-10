@@ -27,7 +27,7 @@ ext {
     libraryDescription = 'Freestar Android SDK - Unity Plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/SDK_documentation_android.git'
-    libraryVersion = '1.2.17'  //CHANGE
+    libraryVersion = '1.3.1'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'vdopia developer'
     developerEmail = 'support@freestar.io'
@@ -38,13 +38,13 @@ ext {
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 3
+        targetSdkVersion 31
+        versionCode 4
         versionName "$libraryVersion"
         archivesBaseName = "$artifact"
     }
@@ -91,7 +91,7 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 
     //compileOnly project(':Source')
-    compileOnly 'com.freestar.android.ads:freestar:4.6.0'
+    compileOnly 'com.freestar.android.ads:freestar:4.6.4'
     //compileOnly 'com.android.support:multidex:1.0.3'
     //compile 'com.vdopia.ads.lw:coresdk:2.5.2.0'
 }
