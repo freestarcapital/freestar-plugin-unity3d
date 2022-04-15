@@ -150,5 +150,7 @@
     <iosPod name="FreestarAds-Unity" version="~> 4.1"></iosPod>
     <iosPod name="FreestarAds-Vungle" version="~> 6.10"></iosPod>
     <iosPod name="FreestarAds-Pangle" version="~> 3.7"></iosPod>
+    <iosPod name="FreestarAds-Yahoo" version="~> 1.0"></iosPod>
+    <iosPod name="FreestarAds-Hyprmx" version="~> 6.0"></iosPod>
   </iosPods>
 </dependencies>
